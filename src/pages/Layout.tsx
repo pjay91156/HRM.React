@@ -17,6 +17,7 @@ const Layout: React.FC = () => {
     const [isEmployeesOpen, setIsEmployeesOpen] = useState<boolean>(false);
     const [isLeaveOpen, setIsLeaveOpen] = useState<boolean>(false);
     const [isAttendanceOpen, setIsAttendanceOpen] = useState<boolean>(false);
+    const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
@@ -29,20 +30,31 @@ const Layout: React.FC = () => {
         <div className="min-h-screen bg-[#F8F9FA] flex font-sans antialiased text-gray-900">
 
             {/* Sidebar */}
-            <aside className="w-[240px] bg-white border-r border-gray-200 fixed inset-y-0 left-0 flex flex-col justify-between z-10">
+            <aside className={`${isCollapsed ? 'w-[76px]' : 'w-[240px]'} bg-white border-r border-gray-200 fixed inset-y-0 left-0 flex flex-col z-10 transition-all duration-200`}>
 
-                <div>
+                <div className="flex-1 min-h-0 flex flex-col">
 
                     {/* Logo */}
-                    <div className="h-20 px-6 flex items-center justify-between border-b border-gray-100">
-                        <span className="text-xl font-bold">
-                            HRM System
-                        </span>
-                        <ChevronLeft size={18} />
+                    <div className={`h-20 px-6 flex items-center border-b border-gray-100 ${isCollapsed ? 'justify-center px-2' : 'justify-between'}`}>
+                        {!isCollapsed && (
+                            <span className="text-xl font-bold">
+                                HRM System
+                            </span>
+                        )}
+                        <button
+                            onClick={() => setIsCollapsed(!isCollapsed)}
+                            className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100"
+                            title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                        >
+                            <ChevronLeft
+                                size={18}
+                                className={`transition-transform ${isCollapsed ? 'rotate-180' : ''}`}
+                            />
+                        </button>
                     </div>
 
                     {/* Menu */}
-                    <nav className="p-4 space-y-1">
+                    <nav className="flex-1 overflow-y-auto p-4 space-y-1">
 
                         {[
                             {
@@ -163,13 +175,16 @@ const Layout: React.FC = () => {
                                             navigate(item.path!);
                                         }}
                                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors ${
+                                            isCollapsed ? 'justify-center' : ''
+                                        } ${
                                             isActive
                                                 ? 'bg-blue-50 text-blue-600 font-semibold'
                                                 : 'text-gray-500 hover:bg-gray-50'
                                         }`}
+                                        title={isCollapsed ? item.label : undefined}
                                     >
                                         {item.icon}
-                                        {item.label}
+                                        {!isCollapsed && item.label}
                                     </button>
                                 );
                             }
@@ -182,6 +197,10 @@ const Layout: React.FC = () => {
                                     : isAttendanceOpen;
 
                             const toggleOpen = () => {
+
+                                if (isCollapsed) {
+                                    setIsCollapsed(false);
+                                }
 
                                 if (item.id === 'Employees') {
                                     setIsEmployeesOpen(
@@ -213,7 +232,10 @@ const Layout: React.FC = () => {
                                 >
                                     <button
                                         onClick={toggleOpen}
-                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-colors ${
+                                        title={isCollapsed ? item.label : undefined}
+                                        className={`w-full flex items-center px-4 py-3 rounded-xl text-sm transition-colors ${
+                                            isCollapsed ? 'justify-center' : 'justify-between'
+                                        } ${
                                             activeTab.includes(item.id)
                                                 ? 'bg-gray-50/60 text-slate-900 font-medium'
                                                 : 'text-gray-500 hover:bg-gray-50'
@@ -221,20 +243,22 @@ const Layout: React.FC = () => {
                                     >
                                         <div className="flex items-center gap-3">
                                             {item.icon}
-                                            {item.label}
+                                            {!isCollapsed && item.label}
                                         </div>
 
-                                        <ChevronDown
-                                            size={16}
-                                            className={`text-gray-400 transition-transform ${
-                                                isOpen
-                                                    ? 'rotate-180'
-                                                    : ''
-                                            }`}
-                                        />
+                                        {!isCollapsed && (
+                                            <ChevronDown
+                                                size={16}
+                                                className={`text-gray-400 transition-transform ${
+                                                    isOpen
+                                                        ? 'rotate-180'
+                                                        : ''
+                                                }`}
+                                            />
+                                        )}
                                     </button>
 
-                                    {isOpen && (
+                                    {!isCollapsed && isOpen && (
                                         <div className="ml-6 pl-3 border-l border-gray-100 space-y-1">
 
                                             {item.subItems?.map(
@@ -273,17 +297,20 @@ const Layout: React.FC = () => {
                 {/* Logout */}
                 <div className="p-4 border-t border-gray-100">
                     <button
-                        className="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                        className={`w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition-colors ${
+                            isCollapsed ? 'justify-center' : ''
+                        }`}
                         onClick={handleLogout}
+                        title={isCollapsed ? 'Logout' : undefined}
                     >
                         <LogOut size={18} />
-                        Logout
+                        {!isCollapsed && 'Logout'}
                     </button>
                 </div>
             </aside>
 
             {/* Content */}
-            <div className="flex-1 pl-[240px]">
+            <div className={`flex-1 min-w-0 transition-all duration-200 ${isCollapsed ? 'pl-[76px]' : 'pl-[240px]'}`}>
                 <main className="p-8 max-w-[1400px] mx-auto">
                     <Outlet />
                 </main>

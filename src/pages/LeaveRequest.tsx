@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { CalendarDays } from "lucide-react";
 import leaveTypeService from "../services/leaveTypeService";
 import { type LeaveRequestFormData } from "../models/LeaveRequest";
 import leaveRequestService from "../services/leaveRequestService";
@@ -35,6 +36,55 @@ const LeaveRequest: React.FC = () => {
     const fromDate = watch("fromDate");
     const toDate = watch("toDate");
     const leaveDuration = watch("leaveDuration");
+
+    const fromDateInputRef = useRef<HTMLInputElement | null>(null);
+    const toDateInputRef = useRef<HTMLInputElement | null>(null);
+
+    const openFromDatePicker = () => {
+        fromDateInputRef.current?.showPicker?.();
+        fromDateInputRef.current?.focus();
+    };
+
+    const openToDatePicker = () => {
+        toDateInputRef.current?.showPicker?.();
+        toDateInputRef.current?.focus();
+    };
+
+    const formatDate = (value?: string) => {
+        if (!value) return "Select date";
+        return new Date(value).toLocaleDateString("en-US", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
+    };
+
+    const { ref: fromDateRef, ...fromDateRegister } = register("fromDate", {
+        required: "From Date is required"
+    });
+
+    const { ref: toDateRef, ...toDateRegister } = register("toDate", {
+        required: "To Date is required",
+        validate: (value) => {
+            if (!fromDate) return true;
+
+            const start = new Date(fromDate);
+            const end = new Date(value);
+
+            if (leaveDuration === 2 || leaveDuration === 3) {
+                if (start.getTime() !== end.getTime()) {
+                    return "Select proper date: For Half Day / Short Leave, From Date and To Date must be same";
+                }
+            }
+
+            if (end < start) {
+                return "To Date must be greater than or equal to From Date";
+            }
+
+            return true;
+        }
+    });
 
     useEffect(() => {
         loadLeaveTypes();
@@ -183,16 +233,31 @@ const LeaveRequest: React.FC = () => {
                                     From Date <span className="text-red-500">*</span>
                                 </label>
 
-                                <input
-                                    type="date"
-                                    {...register("fromDate", {
-                                        required: "From Date is required"
-                                    })}
-                                    className={`w-full rounded-lg border bg-white px-4 py-2.5 text-sm shadow-sm ${errors.fromDate
-                                        ? "border-red-500"
-                                        : "border-slate-200"
-                                        }`}
-                                />
+                                <div className="relative">
+                                    <button
+                                        type="button"
+                                        onClick={openFromDatePicker}
+                                        className={`w-full flex items-center gap-2 rounded-lg border bg-white px-4 py-2.5 text-sm shadow-sm text-left ${errors.fromDate
+                                            ? "border-red-500"
+                                            : "border-slate-200"
+                                            }`}
+                                    >
+                                        <CalendarDays size={16} className="text-indigo-600 shrink-0" />
+                                        <span className={fromDate ? "text-slate-800" : "text-slate-400"}>
+                                            {formatDate(fromDate)}
+                                        </span>
+                                    </button>
+
+                                    <input
+                                        type="date"
+                                        {...fromDateRegister}
+                                        ref={(el) => {
+                                            fromDateRef(el);
+                                            fromDateInputRef.current = el;
+                                        }}
+                                        className="absolute inset-0 opacity-0 pointer-events-none"
+                                    />
+                                </div>
 
                                 {errors.fromDate && (
                                     <p className="text-red-500 text-sm mt-1">
@@ -207,36 +272,31 @@ const LeaveRequest: React.FC = () => {
                                     To Date <span className="text-red-500">*</span>
                                 </label>
 
-                                <input
-                                    type="date"
-                                    {...register("toDate", {
-                                        required: "To Date is required",
-                                        validate: (value) => {
-                                            if (!fromDate) return true;
+                                <div className="relative">
+                                    <button
+                                        type="button"
+                                        onClick={openToDatePicker}
+                                        className={`w-full flex items-center gap-2 rounded-lg border bg-white px-4 py-2.5 text-sm shadow-sm text-left ${errors.toDate
+                                            ? "border-red-500"
+                                            : "border-slate-200"
+                                            }`}
+                                    >
+                                        <CalendarDays size={16} className="text-indigo-600 shrink-0" />
+                                        <span className={toDate ? "text-slate-800" : "text-slate-400"}>
+                                            {formatDate(toDate)}
+                                        </span>
+                                    </button>
 
-                                            const start = new Date(fromDate);
-                                            const end = new Date(value);
-
-                                            // ✅ HALF DAY RULE (ONLY CHANGE ADDED)
-                                            if (leaveDuration === 2 || leaveDuration === 3) {
-                                                if (start.getTime() !== end.getTime()) {
-                                                    return "Select proper date: For Half Day / Short Leave, From Date and To Date must be same";
-                                                }
-                                            }
-
-                                            // normal rule
-                                            if (end < start) {
-                                                return "To Date must be greater than or equal to From Date";
-                                            }
-
-                                            return true;
-                                        }
-                                    })}
-                                    className={`w-full rounded-lg border bg-white px-4 py-2.5 text-sm shadow-sm ${errors.toDate
-                                        ? "border-red-500"
-                                        : "border-slate-200"
-                                        }`}
-                                />
+                                    <input
+                                        type="date"
+                                        {...toDateRegister}
+                                        ref={(el) => {
+                                            toDateRef(el);
+                                            toDateInputRef.current = el;
+                                        }}
+                                        className="absolute inset-0 opacity-0 pointer-events-none"
+                                    />
+                                </div>
 
                                 {errors.toDate && (
                                     <p className="text-red-500 text-sm mt-1">

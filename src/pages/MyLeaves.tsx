@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import leaveRequestService from "../services/leaveRequestService";
 import { Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Loader from "../components/common/Loader";
 
 interface LeaveRequest {
   id: string;
@@ -25,6 +26,7 @@ const statusConfig = [
 const MyLeaves: React.FC = () => {
   const [leaves, setLeaves] = useState<LeaveRequest[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,8 +34,13 @@ const MyLeaves: React.FC = () => {
   }, []);
 
   const fetchMyLeaves = async () => {
-    const response = await leaveRequestService.getMyLeaves();
-    if (response.success) setLeaves(response.data);
+    setLoading(true);
+    try {
+      const response = await leaveRequestService.getMyLeaves();
+      if (response.success) setLeaves(response.data);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const filteredLeaves = selectedStatus === null 
@@ -93,7 +100,13 @@ const MyLeaves: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredLeaves.map((leave) => {
+            {loading ? (
+              <tr>
+                <td colSpan={6} className="py-16">
+                  <Loader />
+                </td>
+              </tr>
+            ) : filteredLeaves.map((leave) => {
               const config = statusConfig.find(c => c.status === leave.status);
               return (
                 <tr key={leave.id} className="border-b border-slate-100 hover:bg-slate-50">

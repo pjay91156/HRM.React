@@ -2,6 +2,7 @@ import { useState, type ChangeEvent } from "react";
 import  { type RegisterRequest } from "../models/RegisterModel";
 import { register } from "../services/authService";
 import { Link } from "react-router-dom";
+import Loader from "../components/common/Loader";
 
 export default function Register() {
   const [form, setForm] = useState<RegisterRequest>({
@@ -11,10 +12,11 @@ export default function Register() {
     email: "",
     password: "",
     confirmPassword: ""
-   
+
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -56,6 +58,7 @@ const handleSubmit = async (
   if (!validate()) return;
 
   try {
+    setLoading(true);
     const response = await register(form);
 
     if (response.success) {
@@ -82,6 +85,8 @@ const handleSubmit = async (
     } else {
       alert("Something went wrong.");
     }
+  } finally {
+    setLoading(false);
   }
 };
 
@@ -244,9 +249,11 @@ const handleSubmit = async (
             {/* BUTTON */}
             <button
               type="submit"
-              className="w-full py-3 bg-[#4e91dc] text-white rounded-md text-base font-medium tracking-wide transition-colors hover:bg-[#3b7ec9] active:bg-[#2c6cb3]"
+              disabled={loading}
+              className="w-full py-3 bg-[#4e91dc] text-white rounded-md text-base font-medium tracking-wide transition-colors hover:bg-[#3b7ec9] active:bg-[#2c6cb3] disabled:opacity-60 flex items-center justify-center gap-2"
             >
-              Continue
+              {loading && <Loader size="sm" />}
+              {loading ? "Creating account..." : "Continue"}
             </button>
 
           </form>

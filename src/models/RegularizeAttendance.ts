@@ -46,3 +46,42 @@ export interface ManagerPendingRegularizationResponse {
     changeTypes: string;
     status: string;
 }
+
+export interface RegularizationChangeDetail {
+    changeType: string;
+    sessionNumber?: number;
+    isNewSession: boolean;
+    current: string;
+    requested: string;
+    changeDescription: string;
+}
+
+export interface ExistingSessionDetail {
+    sessionNumber: number;
+    checkIn: string;
+    checkOut: string;
+    workingTime: string;
+}
+
+export interface RegularizationDetailsResponse {
+    attendanceId: string;
+    employeeId: string;
+    employeeCode: string;
+    employeeName: string;
+    departmentName: string;
+    attendanceDate: string;
+    requestedOn: string;
+    reason: string;
+    status: string;
+    currentWorkingTime: string;
+    proposedWorkingTime: string;
+    existingSessions: ExistingSessionDetail[];
+    changes: RegularizationChangeDetail[];
+}
+
+export interface RegularizationApprovalRequest {
+    attendanceId: string;
+    employeeId: string;
+    status: number;
+    comments?: string;
+}

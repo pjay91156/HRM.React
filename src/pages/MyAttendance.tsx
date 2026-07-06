@@ -10,6 +10,7 @@ import {
 import { checkIn, checkOut } from "../services/attendanceService";
 import { type AttendanceSummaryResponse, type TodayAttendanceResponse, type WeeklyAttendanceSummaryResponse } from "../models/Attendance";
 import { getAttendanceSummary, getTodayAttendance, getWeeklySummary } from "../services/attendanceService";
+import Loader from "../components/common/Loader";
 
 
 const MyAttendance: React.FC = () => {
@@ -30,11 +31,22 @@ const MyAttendance: React.FC = () => {
             dateInputRef.current.focus();
         }
     };
+
+    const isToday = selectedDate === new Date().toISOString().split("T")[0];
+
+    const dateLabel = isToday
+        ? "Today"
+        : new Date(selectedDate).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+        });
+
     const loadWeeklySummary = async () => {
 
         try {
 
-            const response = await getWeeklySummary();
+            const response = await getWeeklySummary(selectedDate);
 
             setWeeklySummary(response);
 
@@ -49,13 +61,16 @@ const MyAttendance: React.FC = () => {
     const loadAttendanceHistory = async () => {
         try {
 
-
-            const data = await getTodayAttendance();
+            const data = await getTodayAttendance(selectedDate);
 
             setAttendanceHistory(data);
-            if (data.canCheckOut) {
+
+            if (isToday && data.canCheckOut) {
                 setCanCheckIn(false);
                 setCanCheckOut(true);
+            } else {
+                setCanCheckIn(isToday);
+                setCanCheckOut(false);
             }
 
         }
@@ -68,15 +83,24 @@ const MyAttendance: React.FC = () => {
     };
     const [attendance, setAttendance] =
         useState<AttendanceSummaryResponse | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        loadAttendance();
-        loadAttendanceHistory();
-        loadWeeklySummary();
-    }, []);
+        const loadAll = async () => {
+            setLoading(true);
+            await Promise.allSettled([
+                loadAttendance(),
+                loadAttendanceHistory(),
+                loadWeeklySummary(),
+            ]);
+            setLoading(false);
+        };
+
+        loadAll();
+    }, [selectedDate]);
 
     const loadAttendance = async () => {
-        const data = await getAttendanceSummary();
+        const data = await getAttendanceSummary(selectedDate);
         setAttendance(data);
     };
 
@@ -155,7 +179,13 @@ const MyAttendance: React.FC = () => {
 
 
     return (
-        <div className="space-y-6 w-full max-w-7xl mx-auto">
+        <div className="relative space-y-6 w-full max-w-7xl mx-auto">
+
+            {loading && (
+                <div className="fixed inset-0 z-50 bg-white/50 backdrop-blur-[1px] flex items-center justify-center">
+                    <Loader />
+                </div>
+            )}
 
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
 
@@ -247,7 +277,7 @@ const MyAttendance: React.FC = () => {
 
                             <p className="text-gray-500 mt-1">
 
-                                Today
+                                {dateLabel}
 
                             </p>
 
@@ -281,7 +311,7 @@ const MyAttendance: React.FC = () => {
 
                             <p className="text-gray-500 mt-1">
 
-                                Today
+                                {dateLabel}
 
                             </p>
 
@@ -315,7 +345,7 @@ const MyAttendance: React.FC = () => {
 
                             <p className="text-gray-500 mt-1">
 
-                                Today
+                                {dateLabel}
 
                             </p>
 
@@ -375,7 +405,9 @@ const MyAttendance: React.FC = () => {
                                     className="mt-0.5 flex-shrink-0"
                                 />
                                 <span>
-                                    You can check in multiple times in a day
+                                    {isToday
+                                        ? "You can check in multiple times in a day"
+                                        : "Check-in is only available for today's date"}
                                 </span>
                             </div>
 
@@ -428,7 +460,9 @@ const MyAttendance: React.FC = () => {
                                     className="mt-0.5 flex-shrink-0"
                                 />
                                 <span>
-                                    You can check out multiple times in a day
+                                    {isToday
+                                        ? "You can check out multiple times in a day"
+                                        : "Check-out is only available for today's date"}
                                 </span>
                             </div>
 
@@ -445,7 +479,7 @@ const MyAttendance: React.FC = () => {
 
                 <div className="px-6 py-5 border-b border-gray-100">
                     <h2 className="text-xl font-bold text-gray-800">
-                        Today's Check In/Out Activity
+                        {isToday ? "Today's" : dateLabel} Check In/Out Activity
                     </h2>
                 </div>
 

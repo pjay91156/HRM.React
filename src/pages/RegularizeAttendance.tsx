@@ -13,6 +13,13 @@ const RegularizeAttendance: React.FC = () => {
     const dateInputRef = useRef<HTMLInputElement>(null);
     const [isRegularizationModalOpen, setIsRegularizationModalOpen] = useState(false);
 
+    const openDatePicker = () => {
+        if (dateInputRef.current) {
+            dateInputRef.current.showPicker?.();
+            dateInputRef.current.focus();
+        }
+    };
+
     useEffect(() => {
         loadData();
     }, [selectedDate]);
@@ -50,26 +57,35 @@ const RegularizeAttendance: React.FC = () => {
                     <p className="text-sm text-slate-500 mt-0.5">Manage and regularize your daily sessions</p>
                 </div>
                 <div className="flex items-center gap-4">
-                    <button
-                        onClick={() => dateInputRef.current?.showPicker?.()}
-                        className="inline-flex items-center gap-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium px-4 py-2.5 rounded-xl hover:border-indigo-300 transition-all shadow-sm"
-                    >
-                        <CalendarDays size={16} className="text-indigo-600" />
-                        {new Date(selectedDate).toLocaleDateString()}
-                    </button>
+                    <div className="relative">
+                        <button
+                            type="button"
+                            onClick={openDatePicker}
+                            className="inline-flex items-center gap-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium px-4 py-2.5 rounded-xl hover:border-indigo-300 transition-all shadow-sm"
+                        >
+                            <CalendarDays size={16} className="text-indigo-600" />
+                            {new Date(selectedDate).toLocaleDateString("en-US", {
+                                weekday: "long",
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric",
+                            })}
+                        </button>
+
+                        <input
+                            ref={dateInputRef}
+                            type="date"
+                            value={selectedDate}
+                            onChange={(e) => setSelectedDate(e.target.value)}
+                            className="absolute opacity-0 pointer-events-none"
+                        />
+                    </div>
                     <button onClick={() => setIsRegularizationModalOpen(true)} className="inline-flex items-center justify-center gap-2 bg-[#6C63FF] hover:bg-[#5B52F5] text-white text-sm font-medium px-4 py-2.5 rounded-xl transition-colors duration-150 shadow-sm">
 
                         <PlusCircle size={16} />
                         Add Regularization Request
                     </button>
                 </div>
-                <input
-                    ref={dateInputRef}
-                    type="date"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    className="hidden"
-                />
             </div>
 
             {/* TABLE CONTAINER */}

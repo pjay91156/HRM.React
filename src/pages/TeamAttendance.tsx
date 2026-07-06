@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Users, CheckCircle, XCircle, CalendarDays, RefreshCw, Download, Calendar, Search } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Users, CheckCircle, XCircle, CalendarDays, RefreshCw, Download, Search } from 'lucide-react';
 import { getAttendanceSummaryByDate, getTeamAttendance } from '../services/attendanceService';
 import { type TeamAttendanceSummaryResponse, type TeamAttendanceFilter, type TeamAttendanceItem } from '../models/Attendance';
+import Loader from '../components/common/Loader';
 
 export const TeamAttendance = () => {
   const [summary, setSummary] = useState<TeamAttendanceSummaryResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [employees, setEmployees] = useState<TeamAttendanceItem[]>([]);
   const [totalRecords, setTotalRecords] = useState(0);
+  const dateInputRef = useRef<HTMLInputElement>(null);
 
   const [filter, setFilter] = useState<TeamAttendanceFilter>({
     managerId: null,
@@ -46,6 +48,13 @@ export const TeamAttendance = () => {
     setFilter(prev => ({ ...prev, attendanceDate: e.target.value, pageNumber: 1 }));
   };
 
+  const openDatePicker = () => {
+    if (dateInputRef.current) {
+      dateInputRef.current.showPicker?.();
+      dateInputRef.current.focus();
+    }
+  };
+
   const changePage = (page: number) => {
     setFilter(prev => ({ ...prev, pageNumber: page }));
   };
@@ -60,13 +69,27 @@ export const TeamAttendance = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 shadow-sm">
-            <Calendar size={16} />
+          <div className="relative">
+            <button
+              type="button"
+              onClick={openDatePicker}
+              className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 transition-all"
+            >
+              <CalendarDays size={16} className="text-blue-600" />
+              {new Date(filter.attendanceDate).toLocaleDateString("en-US", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
+            </button>
+
             <input
+              ref={dateInputRef}
               type="date"
               value={filter.attendanceDate}
               onChange={handleDateChange}
-              className="outline-none border-none bg-transparent"
+              className="absolute opacity-0 pointer-events-none"
             />
           </div>
           <button
@@ -131,7 +154,7 @@ export const TeamAttendance = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-100">
               {loading ? (
-                <tr><td colSpan={6} className="text-center py-16 text-gray-400">Loading records...</td></tr>
+                <tr><td colSpan={6} className="py-16"><Loader /></td></tr>
               ) : employees.length === 0 ? (
                 <tr><td colSpan={6} className="text-center py-16 text-gray-500">No employees found.</td></tr>
               ) : (

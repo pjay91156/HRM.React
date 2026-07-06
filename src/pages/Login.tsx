@@ -2,6 +2,7 @@ import { useState, type ChangeEvent } from "react";
 import { Link } from "react-router-dom";
 import { login } from "../services/authService";
 import { useNavigate } from "react-router-dom";
+import Loader from "../components/common/Loader";
 
 export default function Login() {
   const [form, setForm] = useState({
@@ -10,6 +11,7 @@ export default function Login() {
   });
   const navigate = useNavigate();
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -42,6 +44,7 @@ export default function Login() {
     if (!validate()) return;
 
     try {
+      setLoading(true);
 
       const response = await login(form);
       localStorage.setItem("token", response.data.token);
@@ -49,6 +52,8 @@ export default function Login() {
 
     } catch {
       alert("Login failed.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -142,9 +147,11 @@ export default function Login() {
             {/* LOGIN BUTTON */}
             <button
               type="submit"
-              className="w-full py-3 bg-[#4e91dc] text-white rounded-md text-base font-medium tracking-wide transition-colors hover:bg-[#3b7ec9] active:bg-[#2c6cb3]"
+              disabled={loading}
+              className="w-full py-3 bg-[#4e91dc] text-white rounded-md text-base font-medium tracking-wide transition-colors hover:bg-[#3b7ec9] active:bg-[#2c6cb3] disabled:opacity-60 flex items-center justify-center gap-2"
             >
-              Log In
+              {loading && <Loader size="sm" />}
+              {loading ? "Logging in..." : "Log In"}
             </button>
 
           </form>

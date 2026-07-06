@@ -1,6 +1,12 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
+declare module "axios" {
+  export interface AxiosRequestConfig {
+    skipSuccessToast?: boolean;
+  }
+}
+
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
@@ -22,11 +28,12 @@ api.interceptors.response.use(
 
         const method = response.config.method?.toLowerCase();
 
-        // Show success message only for Create/Update/Delete APIs
+        // Show success message only for Create/Update/Delete APIs (not for data retrieval calls)
         if (
             response.data?.message &&
             method &&
-            ["post", "put", "delete"].includes(method)
+            ["post", "put", "delete"].includes(method) &&
+            !response.config.skipSuccessToast
         ) {
             toast.success(response.data.message);
         }

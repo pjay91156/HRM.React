@@ -13,23 +13,23 @@ export const checkOut = async () => {
     const response = await api.post("attendance/checkout");
     return response.data;
 };
-export const getTodayAttendance = async (): Promise<TodayAttendanceResponse> => {
-    const response = await api.get("attendance/today");
+export const getTodayAttendance = async (date: string): Promise<TodayAttendanceResponse> => {
+    const response = await api.get(`attendance/today?attendanceDate=${date}`);
 
     return response.data.data;
 };
 
 export const getAttendanceSummary =
-    async (): Promise<AttendanceSummaryResponse> => {
+    async (date: string): Promise<AttendanceSummaryResponse> => {
 
-        const response = await api.get("attendance/summary");
+        const response = await api.get(`attendance/summary?attendanceDate=${date}`);
 
         return response.data;
     };
 export const getWeeklySummary =
-    async (): Promise<WeeklyAttendanceSummaryResponse> => {
+    async (date: string): Promise<WeeklyAttendanceSummaryResponse> => {
 
-        const response = await api.get("attendance/weekly-summary");
+        const response = await api.get(`attendance/weekly-summary?attendanceDate=${date}`);
 
         return response.data;
     };
@@ -44,7 +44,8 @@ export const getTeamAttendance = async (
 
     const response = await api.post(
         "attendance/team-attendance",
-        request
+        request,
+        { skipSuccessToast: true }
     );
 
     return response.data.data;
