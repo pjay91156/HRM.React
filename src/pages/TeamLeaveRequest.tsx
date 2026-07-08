@@ -107,31 +107,31 @@ const TeamLeaveRequests: React.FC = () => {
         <div className="p-8 max-w-[1400px] mx-auto">
             {/* Header */}
             <div className="mb-6">
-                <h1 className="text-2xl font-bold text-slate-900">
+                <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
                     Team Leave Requests
                 </h1>
-                <p className="text-slate-500">
+                <p className="text-slate-500 dark:text-slate-400">
                     Review and take action on your team's leave requests
                 </p>
             </div>
 
             {/* Table Section */}
-            <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
                 {/* Toolbar */}
-                <div className="p-4 border-b border-slate-200 flex justify-between items-center">
+                <div className="p-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
                     <div className="relative w-64">
                         <Search
-                            className="absolute left-3 top-2.5 text-slate-400"
+                            className="absolute left-3 top-2.5 text-slate-400 dark:text-slate-500"
                             size={18}
                         />
                         <input
                             type="text"
                             placeholder="Search requests..."
-                            className="pl-10 pr-4 py-2 border border-slate-200 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="pl-10 pr-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
                     </div>
 
-                    <select className="border border-slate-200 rounded-lg px-4 py-2 text-sm text-slate-600">
+                    <select className="border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm text-slate-600 dark:text-slate-400">
                         <option>Pending</option>
                         <option>All</option>
                     </select>
@@ -143,41 +143,41 @@ const TeamLeaveRequests: React.FC = () => {
                     </div>
                 ) : (
                     <table className="w-full text-left">
-                        <thead className="bg-slate-50 border-b border-slate-200">
+                        <thead className="bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-700">
                             <tr>
-                                <th className="p-4 text-xs font-bold text-slate-500 uppercase">
+                                <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
                                     Employee
                                 </th>
-                                <th className="p-4 text-xs font-bold text-slate-500 uppercase">
+                                <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
                                     Leave Type
                                 </th>
-                                <th className="p-4 text-xs font-bold text-slate-500 uppercase">
+                                <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
                                     From
                                 </th>
-                                <th className="p-4 text-xs font-bold text-slate-500 uppercase">
+                                <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
                                     To
                                 </th>
-                                <th className="p-4 text-xs font-bold text-slate-500 uppercase">
+                                <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
                                     Days
                                 </th>
-                                <th className="p-4 text-xs font-bold text-slate-500 uppercase">
+                                <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
                                     Reason
                                 </th>
-                                <th className="p-4 text-xs font-bold text-slate-500 uppercase">
+                                <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
                                     Applied On
                                 </th>
-                                <th className="p-4 text-xs font-bold text-slate-500 uppercase">
+                                <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
                                     Action
                                 </th>
                             </tr>
                         </thead>
 
-                        <tbody className="divide-y divide-slate-100">
+                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                             {requests.length === 0 ? (
                                 <tr>
                                     <td
                                         colSpan={8}
-                                        className="p-8 text-center text-slate-500"
+                                        className="p-8 text-center text-slate-500 dark:text-slate-400"
                                     >
                                         No leave requests found.
                                     </td>
@@ -186,33 +186,33 @@ const TeamLeaveRequests: React.FC = () => {
                                 requests.map((req) => (
                                     <tr
                                         key={req.leaveRequestId}
-                                        className="hover:bg-slate-50"
+                                        className="hover:bg-slate-50 dark:hover:bg-slate-800"
                                     >
-                                        <td className="p-4 text-sm font-medium text-slate-900">
+                                        <td className="p-4 text-sm font-medium text-slate-900 dark:text-slate-100">
                                             {req.employeeName}
                                         </td>
 
-                                        <td className="p-4 text-sm text-slate-600">
+                                        <td className="p-4 text-sm text-slate-600 dark:text-slate-400">
                                             {req.leaveType}
                                         </td>
 
-                                        <td className="p-4 text-sm text-slate-600">
+                                        <td className="p-4 text-sm text-slate-600 dark:text-slate-400">
                                             {new Date(req.fromDate).toLocaleDateString()}
                                         </td>
 
-                                        <td className="p-4 text-sm text-slate-600">
+                                        <td className="p-4 text-sm text-slate-600 dark:text-slate-400">
                                             {new Date(req.toDate).toLocaleDateString()}
                                         </td>
 
-                                        <td className="p-4 text-sm text-slate-600">
+                                        <td className="p-4 text-sm text-slate-600 dark:text-slate-400">
                                             {req.totalDays}
                                         </td>
 
-                                        <td className="p-4 text-sm text-slate-600">
+                                        <td className="p-4 text-sm text-slate-600 dark:text-slate-400">
                                             {req.reason}
                                         </td>
 
-                                        <td className="p-4 text-sm text-slate-600">
+                                        <td className="p-4 text-sm text-slate-600 dark:text-slate-400">
                                             {new Date(req.appliedOn).toLocaleDateString()}
                                         </td>
 

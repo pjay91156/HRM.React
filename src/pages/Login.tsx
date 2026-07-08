@@ -58,10 +58,10 @@ export default function Login() {
   };
 
   const inputClass = (field: string) =>
-    `w-full px-3 py-2.5 border rounded-md text-sm outline-none placeholder-gray-400 transition-colors
+    `w-full px-3 py-2.5 border rounded-md text-sm outline-none placeholder-gray-400 dark:placeholder-slate-500 transition-colors
     ${errors[field]
       ? "border-red-500"
-      : "border-gray-300 focus:border-[#4a90e2]"
+      : "border-gray-300 dark:border-slate-600 focus:border-[#4a90e2]"
     }`;
 
   return (
@@ -73,11 +73,11 @@ export default function Login() {
           Welcome Back
         </h1>
 
-        <p className="text-center text-gray-600 mb-8">
+        <p className="text-center text-gray-600 dark:text-slate-400 mb-8">
           Sign in to continue
         </p>
 
-        <div className="bg-white border border-[#e9ecef] rounded-lg p-5 sm:p-8 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 border border-[#e9ecef] rounded-lg p-5 sm:p-8 shadow-sm">
 
           <form onSubmit={handleSubmit} className="space-y-[18px]">
 
@@ -139,7 +139,7 @@ export default function Login() {
                 className="w-4 h-4 accent-[#4a90e2]"
               />
 
-              <label className="text-sm text-gray-600">
+              <label className="text-sm text-gray-600 dark:text-slate-400">
                 Remember me
               </label>
             </div>
@@ -157,7 +157,7 @@ export default function Login() {
           </form>
         </div>
 
-        <p className="mt-6 text-sm text-gray-600 text-center">
+        <p className="mt-6 text-sm text-gray-600 dark:text-slate-400 text-center">
           Don't have an account?{" "}
           <Link
             to="/register"

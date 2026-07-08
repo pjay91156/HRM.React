@@ -91,11 +91,11 @@ const handleSubmit = async (
 };
 
   const inputClass = (field: string) =>
-    `w-full px-3 py-2.5 border rounded-md text-sm outline-none placeholder-gray-400 transition-colors
+    `w-full px-3 py-2.5 border rounded-md text-sm outline-none placeholder-gray-400 dark:placeholder-slate-500 transition-colors
     ${
       errors[field]
         ? "border-red-500"
-        : "border-gray-300 focus:border-[#4a90e2]"
+        : "border-gray-300 dark:border-slate-600 focus:border-[#4a90e2]"
     }`;
 
   return (
@@ -110,7 +110,7 @@ const handleSubmit = async (
         </h1>
 
         {/* INNER CARD */}
-        <div className="w-full bg-white border border-[#e9ecef] rounded-lg p-5 sm:p-8 shadow-sm">
+        <div className="w-full bg-white dark:bg-slate-900 border border-[#e9ecef] rounded-lg p-5 sm:p-8 shadow-sm">
 
           <form onSubmit={handleSubmit} className="space-y-[18px]">
 
@@ -232,7 +232,7 @@ const handleSubmit = async (
                   onChange={handleChange}
                   className="w-4 h-4 cursor-pointer accent-[#4a90e2]"
                 />
-                <label className="text-[13px] text-gray-600 select-none">
+                <label className="text-[13px] text-gray-600 dark:text-slate-400 select-none">
                   I accept{" "}
                   <a href="#terms" className="text-[#4a90e2] hover:underline">
                     Terms and conditions
@@ -260,7 +260,7 @@ const handleSubmit = async (
         </div>
 
         {/* LOGIN */}
-        <p className="mt-6 text-sm text-gray-600 text-center">
+        <p className="mt-6 text-sm text-gray-600 dark:text-slate-400 text-center">
           Already have an account?{" "}
           <Link
             to="/login"

@@ -34,12 +34,12 @@ const Loader: React.FC<LoaderProps> = ({ size = "lg" }) => {
         <div className="flex items-center justify-center">
             <div className={`relative flex items-center justify-center ${getSize()}`}>
 
-                <div className={`absolute ${getSize()} rounded-full border-gray-200 ${spinnerBorder()}`}></div>
+                <div className={`absolute ${getSize()} rounded-full border-gray-200 dark:border-slate-700 ${spinnerBorder()}`}></div>
 
-                <div className={`absolute ${getSize()} rounded-full border-black border-t-transparent animate-spin ${spinnerBorder()}`}></div>
+                <div className={`absolute ${getSize()} rounded-full border-black dark:border-slate-100 border-t-transparent animate-spin ${spinnerBorder()}`}></div>
 
                 {size === "lg" && (
-                    <div className="absolute w-8 h-8 rounded-full border-2 border-gray-300 border-b-transparent animate-[spin_0.8s_linear_infinite_reverse]"></div>
+                    <div className="absolute w-8 h-8 rounded-full border-2 border-gray-300 dark:border-slate-600 border-b-transparent animate-[spin_0.8s_linear_infinite_reverse]"></div>
                 )}
 
             </div>

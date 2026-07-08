@@ -31,7 +31,7 @@ const LeaveApprovalModal: React.FC<LeaveApprovalModalProps> = ({
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
 
-            <div className="w-full max-w-md rounded-xl bg-white shadow-xl">
+            <div className="w-full max-w-md rounded-xl bg-white dark:bg-slate-900 shadow-xl">
 
                 {/* Header */}
                 <div className="flex items-center gap-3 p-6 border-b">
@@ -58,7 +58,7 @@ const LeaveApprovalModal: React.FC<LeaveApprovalModalProps> = ({
                 {/* Body */}
                 <div className="p-6">
 
-                    <p className="text-sm text-gray-600 mb-4">
+                    <p className="text-sm text-gray-600 dark:text-slate-400 mb-4">
                         Are you sure you want to{" "}
                         <span className="font-semibold">
                             {isApprove ? "approve" : "reject"}
@@ -81,7 +81,7 @@ const LeaveApprovalModal: React.FC<LeaveApprovalModalProps> = ({
                                 ? "Optional comments"
                                 : "Reason for rejection"
                         }
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-full rounded-lg border border-gray-300 dark:border-slate-600 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                 </div>
 
@@ -92,7 +92,7 @@ const LeaveApprovalModal: React.FC<LeaveApprovalModalProps> = ({
                         type="button"
                         disabled={loading}
                         onClick={onClose}
-                        className="w-full sm:w-auto rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium hover:bg-gray-50"
+                        className="w-full sm:w-auto rounded-lg border border-gray-300 dark:border-slate-600 px-5 py-2.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-800"
                     >
                         Cancel
                     </button>

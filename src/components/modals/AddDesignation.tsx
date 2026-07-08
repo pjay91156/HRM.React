@@ -92,12 +92,12 @@ const AddDesignationModal: React.FC<AddDesignationModalProps> = ({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
 
             {/* Container */}
-            <div className="relative w-full max-w-lg max-h-[90vh] flex flex-col rounded-xl bg-white shadow-xl">
+            <div className="relative w-full max-w-lg max-h-[90vh] flex flex-col rounded-xl bg-white dark:bg-slate-900 shadow-xl">
 
                 {/* Header (Sticky at top) */}
-                <div className="flex items-center justify-between p-6 pb-4 border-b border-gray-100">
-                    <h2 className="text-xl font-bold text-gray-900">Add Designation</h2>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600">✕</button>
+                <div className="flex items-center justify-between p-6 pb-4 border-b border-gray-100 dark:border-slate-800">
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">Add Designation</h2>
+                    <button onClick={onClose} className="text-gray-400 dark:text-slate-500 hover:text-gray-600">✕</button>
                 </div>
 
                 {/* Form Wrapper */}
@@ -116,8 +116,8 @@ const AddDesignationModal: React.FC<AddDesignationModalProps> = ({
                                 value={formData.departmentId}
                                 onChange={handleChange}
                                 disabled={fetchingDepartments}
-                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all ${
-                                    errors.departmentId ? "border-red-500" : "border-gray-200"
+                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-950 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all ${
+                                    errors.departmentId ? "border-red-500" : "border-gray-200 dark:border-slate-700"
                                 }`}
                             >
                                 <option value="">
@@ -145,8 +145,8 @@ const AddDesignationModal: React.FC<AddDesignationModalProps> = ({
                                 placeholder="e.g. Senior Software Engineer"
                                 value={formData.name}
                                 onChange={handleChange}
-                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all ${
-                                    errors.name ? "border-red-500" : "border-gray-200"
+                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-950 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all ${
+                                    errors.name ? "border-red-500" : "border-gray-200 dark:border-slate-700"
                                 }`}
                             />
                             {errors.name && (
@@ -157,11 +157,11 @@ const AddDesignationModal: React.FC<AddDesignationModalProps> = ({
                     </div>
 
                     {/* Buttons Footer (Sticky at bottom) */}
-                    <div className="flex justify-end space-x-3 p-6 border-t border-gray-100 bg-white rounded-b-xl">
+                    <div className="flex justify-end space-x-3 p-6 border-t border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-b-xl">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium bg-white hover:bg-gray-50"
+                            className="rounded-lg border border-gray-300 dark:border-slate-600 px-5 py-2.5 text-sm font-medium bg-white dark:bg-slate-900 hover:bg-gray-50 dark:hover:bg-slate-800"
                         >
                             Cancel
                         </button>

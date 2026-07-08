@@ -64,8 +64,8 @@ export const TeamAttendance = () => {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">My Team Attendance</h1>
-          <p className="text-sm text-gray-500">View and manage attendance records for your team.</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100">My Team Attendance</h1>
+          <p className="text-sm text-gray-500 dark:text-slate-400">View and manage attendance records for your team.</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -73,7 +73,7 @@ export const TeamAttendance = () => {
             <button
               type="button"
               onClick={openDatePicker}
-              className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 transition-all"
+              className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg text-sm font-medium text-gray-700 dark:text-slate-300 shadow-sm hover:bg-gray-50 dark:hover:bg-slate-800 transition-all"
             >
               <CalendarDays size={16} className="text-blue-600" />
               {new Date(filter.attendanceDate).toLocaleDateString("en-US", {
@@ -94,7 +94,7 @@ export const TeamAttendance = () => {
           </div>
           <button
             onClick={loadData}
-            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 shadow-sm transition-all"
+            className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-800 shadow-sm transition-all"
           >
             <RefreshCw size={16} /> Refresh
           </button>
@@ -112,10 +112,10 @@ export const TeamAttendance = () => {
           { title: 'Absent', count: summary?.absentEmployees ?? 0, icon: <XCircle size={20} />, color: 'text-rose-600 bg-rose-50' },
           { title: 'On Leave', count: summary?.onLeaveEmployees ?? 0, icon: <CalendarDays size={20} />, color: 'text-amber-600 bg-amber-50' },
         ].map((card, idx) => (
-          <div key={idx} className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+          <div key={idx} className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-gray-100 dark:border-slate-800 shadow-sm flex items-center justify-between">
             <div>
-              <p className="text-xs uppercase tracking-wider text-gray-400 font-bold mb-1">{card.title}</p>
-              <h3 className="text-2xl font-bold text-gray-900">{card.count}</h3>
+              <p className="text-xs uppercase tracking-wider text-gray-400 dark:text-slate-500 font-bold mb-1">{card.title}</p>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-slate-100">{card.count}</h3>
             </div>
             <div className={`p-3 rounded-xl ${card.color}`}>
               {card.icon}
@@ -125,25 +125,25 @@ export const TeamAttendance = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="bg-white rounded-xl border border-gray-100 p-2 shadow-sm">
+      <div className="bg-white dark:bg-slate-900 rounded-xl border border-gray-100 dark:border-slate-800 p-2 shadow-sm">
         <div className="relative">
-          <Search size={18} className="absolute left-3 top-3 text-gray-400" />
+          <Search size={18} className="absolute left-3 top-3 text-gray-400 dark:text-slate-500" />
           <input
             type="text"
             placeholder="Search by name or code..."
             value={filter.searchText}
             onChange={handleSearch}
-            className="w-full pl-10 pr-4 py-2 bg-gray-50 rounded-lg border-none focus:ring-2 focus:ring-indigo-500 transition-all"
+            className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-slate-950 rounded-lg border-none focus:ring-2 focus:ring-indigo-500 transition-all"
           />
         </div>
       </div>
 
       {/* Modern Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-100">
+          <table className="min-w-full divide-y divide-gray-100 dark:divide-slate-800">
             <thead className="bg-gray-50/50">
-              <tr className="text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+              <tr className="text-left text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider">
                 <th className="px-6 py-4">Employee</th>
                 <th className="px-6 py-4">Reporting To</th>
                 <th className="px-6 py-4">Check In</th>
@@ -152,25 +152,25 @@ export const TeamAttendance = () => {
                 <th className="px-6 py-4">Status</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-100">
+            <tbody className="bg-white dark:bg-slate-900 divide-y divide-gray-100 dark:divide-slate-800">
               {loading ? (
                 <tr><td colSpan={6} className="py-16"><Loader /></td></tr>
               ) : employees.length === 0 ? (
-                <tr><td colSpan={6} className="text-center py-16 text-gray-500">No employees found.</td></tr>
+                <tr><td colSpan={6} className="text-center py-16 text-gray-500 dark:text-slate-400">No employees found.</td></tr>
               ) : (
                 employees.map(employee => (
                   <tr key={employee.employeeId} className="hover:bg-gray-50/80 transition-colors duration-200">
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
-                        <span className="font-medium text-gray-900">{employee.employeeName}</span>
-                        <span className="text-xs text-gray-400">{employee.employeeCode}</span>
+                        <span className="font-medium text-gray-900 dark:text-slate-100">{employee.employeeName}</span>
+                        <span className="text-xs text-gray-400 dark:text-slate-500">{employee.employeeCode}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{employee.reportingManager || "—"}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600 font-mono">
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-400">{employee.reportingManager || "—"}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-400 font-mono">
                       {employee.firstCheckIn ? new Date(employee.firstCheckIn).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' }) : "—"}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600 font-mono">
+                    <td className="px-6 py-4 text-sm text-gray-600 dark:text-slate-400 font-mono">
                       {employee.lastCheckOut ? new Date(employee.lastCheckOut).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' }) : "—"}
                     </td>
                     <td className="px-6 py-4 text-sm font-semibold text-indigo-600">
@@ -193,13 +193,13 @@ export const TeamAttendance = () => {
         </div>
 
         {/* Pagination Footer */}
-        <div className="flex justify-between items-center px-6 py-4 border-t border-gray-100 bg-gray-50/30">
-          <div className="text-sm text-gray-500">
+        <div className="flex justify-between items-center px-6 py-4 border-t border-gray-100 dark:border-slate-800 bg-gray-50/30">
+          <div className="text-sm text-gray-500 dark:text-slate-400">
             Showing <span className="font-medium">{Math.min((filter.pageNumber - 1) * filter.pageLength + 1, totalRecords || 1)}</span> to <span className="font-medium">{Math.min(filter.pageNumber * filter.pageLength, totalRecords)}</span> of <span className="font-medium">{totalRecords}</span>
           </div>
           <div className="flex gap-2">
-            <button disabled={filter.pageNumber === 1} onClick={() => changePage(filter.pageNumber - 1)} className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 disabled:opacity-50 transition-all">Previous</button>
-            <button disabled={filter.pageNumber * filter.pageLength >= totalRecords} onClick={() => changePage(filter.pageNumber + 1)} className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 disabled:opacity-50 transition-all">Next</button>
+            <button disabled={filter.pageNumber === 1} onClick={() => changePage(filter.pageNumber - 1)} className="px-4 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-800 disabled:opacity-50 transition-all">Previous</button>
+            <button disabled={filter.pageNumber * filter.pageLength >= totalRecords} onClick={() => changePage(filter.pageNumber + 1)} className="px-4 py-2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-slate-800 disabled:opacity-50 transition-all">Next</button>
           </div>
         </div>
       </div>

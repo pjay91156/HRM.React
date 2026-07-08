@@ -47,9 +47,9 @@ const EmployeeCardNode: React.FC<NodeProps> = ({ employee }) => {
             {/* CARD */}
             <div
                 onClick={() => hasChildren && setIsCollapsed(!isCollapsed)}
-                className={`group relative w-52 rounded-2xl border bg-white p-3 shadow-sm transition-all z-10 ${
+                className={`group relative w-52 rounded-2xl border bg-white dark:bg-slate-900 p-3 shadow-sm transition-all z-10 ${
                     hasChildren ? 'cursor-pointer hover:-translate-y-0.5 hover:shadow-lg' : 'hover:shadow-md'
-                } ${employee.isSelf ? 'border-indigo-300 ring-4 ring-indigo-50' : 'border-slate-200'}`}
+                } ${employee.isSelf ? 'border-indigo-300 ring-4 ring-indigo-50' : 'border-slate-200 dark:border-slate-700'}`}
             >
                 <span className={`absolute inset-x-0 top-0 h-1.5 rounded-t-2xl ${style.accent}`} />
 
@@ -59,7 +59,7 @@ const EmployeeCardNode: React.FC<NodeProps> = ({ employee }) => {
                     </div>
                     <div className="min-w-0 flex-1 text-left">
                         <div className="flex items-center justify-between gap-1.5">
-                            <span className="truncate text-sm font-semibold text-slate-900">{employee.name}</span>
+                            <span className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">{employee.name}</span>
                             {hasChildren && (
                                 <button
                                     type="button"
@@ -67,7 +67,7 @@ const EmployeeCardNode: React.FC<NodeProps> = ({ employee }) => {
                                         e.stopPropagation();
                                         setIsCollapsed(!isCollapsed);
                                     }}
-                                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                                    className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-slate-400 dark:text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
                                     title={isCollapsed ? 'Expand team' : 'Collapse team'}
                                 >
                                     {isCollapsed ? <ChevronDown size={13} /> : <ChevronUp size={13} />}
@@ -75,24 +75,24 @@ const EmployeeCardNode: React.FC<NodeProps> = ({ employee }) => {
                             )}
                         </div>
                         {employee.isSelf && (
-                            <span className="mt-0.5 inline-block rounded-full bg-indigo-50 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-indigo-600">
+                            <span className="mt-0.5 inline-block rounded-full bg-indigo-50 dark:bg-indigo-500/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-indigo-600">
                                 You
                             </span>
                         )}
-                        <div className="text-[10px] text-slate-400">{employee.employeeCode}</div>
-                        <div className="mt-1.5 space-y-1 text-[10px] text-slate-500">
+                        <div className="text-[10px] text-slate-400 dark:text-slate-500">{employee.employeeCode}</div>
+                        <div className="mt-1.5 space-y-1 text-[10px] text-slate-500 dark:text-slate-400">
                             <div className="flex items-center gap-1 truncate">
-                                <Briefcase size={11} className="shrink-0 text-slate-400" /> <span className="truncate">{employee.designation}</span>
+                                <Briefcase size={11} className="shrink-0 text-slate-400 dark:text-slate-500" /> <span className="truncate">{employee.designation}</span>
                             </div>
                             <div className="flex items-center gap-1 truncate">
-                                <Mail size={11} className="shrink-0 text-slate-400" /> <span className="truncate">{employee.email}</span>
+                                <Mail size={11} className="shrink-0 text-slate-400 dark:text-slate-500" /> <span className="truncate">{employee.email}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {hasChildren && (
-                    <div className="mt-2 flex items-center gap-1.5 border-t border-slate-100 pt-1.5 text-[10px] font-medium text-slate-400">
+                    <div className="mt-2 flex items-center gap-1.5 border-t border-slate-100 dark:border-slate-800 pt-1.5 text-[10px] font-medium text-slate-400 dark:text-slate-500">
                         <Users size={11} />
                         {employee.children.length} direct report{employee.children.length > 1 ? 's' : ''}
                     </div>
@@ -145,18 +145,18 @@ export default function MyTeam() {
             {/* HEADER */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">My Team</h1>
-                    <p className="text-sm text-slate-500 mt-0.5">View your reporting hierarchy and team details</p>
+                    <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">My Team</h1>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">View your reporting hierarchy and team details</p>
                 </div>
 
                 {teamData && (
-                    <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-600 shadow-sm">
-                        <div className="rounded-lg bg-indigo-50 p-2 text-indigo-600">
+                    <div className="flex items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm text-slate-600 dark:text-slate-400 shadow-sm">
+                        <div className="rounded-lg bg-indigo-50 dark:bg-indigo-500/10 p-2 text-indigo-600">
                             <Users size={18} />
                         </div>
                         <div>
-                            <div className="text-lg font-bold leading-none text-slate-900">{totalMembers}</div>
-                            <div className="text-xs text-slate-400">Team member{totalMembers === 1 ? '' : 's'}</div>
+                            <div className="text-lg font-bold leading-none text-slate-900 dark:text-slate-100">{totalMembers}</div>
+                            <div className="text-xs text-slate-400 dark:text-slate-500">Team member{totalMembers === 1 ? '' : 's'}</div>
                         </div>
                     </div>
                 )}
@@ -169,7 +169,7 @@ export default function MyTeam() {
                     </div>
                 </div>
             ) : (
-                <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-slate-200 bg-white py-20 text-center text-slate-500">
+                <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 py-20 text-center text-slate-500 dark:text-slate-400">
                     <AlertCircle size={28} className="text-rose-400" />
                     {error || 'Unable to load your team.'}
                 </div>

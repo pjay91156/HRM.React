@@ -86,10 +86,10 @@ const Dashboard: React.FC = () => {
 
     return (
 
-        <div className="relative w-full min-h-screen bg-slate-50 p-6 font-sans">
+        <div className="relative w-full min-h-screen bg-slate-50 dark:bg-slate-950 p-6 font-sans">
             {/* ✅ FIXED: Switched absolute to fixed to center the loader over the entire browser viewport */}
             {loading && (
-                <div className="fixed inset-0 z-50 bg-white/50 backdrop-blur-[1px] flex items-center justify-center">
+                <div className="fixed inset-0 z-50 bg-white/50 dark:bg-slate-950/60 backdrop-blur-[1px] flex items-center justify-center">
                     <Loader />
                 </div>
             )}

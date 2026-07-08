@@ -71,12 +71,12 @@ const AddDepartmentModal: React.FC<AddDepartmentModalProps> = ({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
 
             {/* CHANGED: Added flex flex-col and removed raw overflow-y-auto from container */}
-            <div className="relative w-full max-w-lg max-h-[90vh] flex flex-col rounded-xl bg-white shadow-xl">
+            <div className="relative w-full max-w-lg max-h-[90vh] flex flex-col rounded-xl bg-white dark:bg-slate-900 shadow-xl">
 
                 {/* Header (Sticky at top) */}
-                <div className="flex items-center justify-between p-6 pb-4 border-b border-gray-100">
-                    <h2 className="text-xl font-bold text-gray-900">Add Department</h2>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600">✕</button>
+                <div className="flex items-center justify-between p-6 pb-4 border-b border-gray-100 dark:border-slate-800">
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">Add Department</h2>
+                    <button onClick={onClose} className="text-gray-400 dark:text-slate-500 hover:text-gray-600">✕</button>
                 </div>
 
                 {/* CHANGED: Made the form a flex element wrapper containing scrollable fields and a fixed footer */}
@@ -95,7 +95,7 @@ const AddDepartmentModal: React.FC<AddDepartmentModalProps> = ({
                                 placeholder="Department"
                                 value={formData.departmentName}
                                 onChange={handleChange}
-                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 ${errors.departmentName ? "border-red-500" : "border-gray-200"}`}
+                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-950 ${errors.departmentName ? "border-red-500" : "border-gray-200 dark:border-slate-700"}`}
                             />
                             {errors.departmentName && <p className="text-red-500 text-sm mt-1">{errors.departmentName}</p>}
                         </div>
@@ -104,11 +104,11 @@ const AddDepartmentModal: React.FC<AddDepartmentModalProps> = ({
                     </div>
 
                     {/* Buttons Footer (Sticky at bottom) */}
-                    <div className="flex justify-end space-x-3 p-6 border-t border-gray-100 bg-white rounded-b-xl">
+                    <div className="flex justify-end space-x-3 p-6 border-t border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-b-xl">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium bg-white hover:bg-gray-50"
+                            className="rounded-lg border border-gray-300 dark:border-slate-600 px-5 py-2.5 text-sm font-medium bg-white dark:bg-slate-900 hover:bg-gray-50 dark:hover:bg-slate-800"
                         >
                             Cancel
                         </button>

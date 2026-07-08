@@ -220,12 +220,12 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
         /* FIXED Backdrop wrapper */
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
 
-            <div className="relative w-full max-w-lg max-h-[90vh] flex flex-col rounded-xl bg-white shadow-xl">
+            <div className="relative w-full max-w-lg max-h-[90vh] flex flex-col rounded-xl bg-white dark:bg-slate-900 shadow-xl">
 
                 {/* Header (Sticky at top) */}
-                <div className="flex items-center justify-between p-6 pb-4 border-b border-gray-100">
-                    <h2 className="text-xl font-bold text-gray-900">Add Employee</h2>
-                    <button type="button" onClick={onClose} className="text-gray-400 hover:text-gray-600">✕</button>
+                <div className="flex items-center justify-between p-6 pb-4 border-b border-gray-100 dark:border-slate-800">
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">Add Employee</h2>
+                    <button type="button" onClick={onClose} className="text-gray-400 dark:text-slate-500 hover:text-gray-600">✕</button>
                 </div>
 
                 <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
@@ -243,7 +243,7 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                                 placeholder="John"
                                 value={formData.firstName}
                                 onChange={handleChange}
-                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 ${errors.firstName ? "border-red-500" : "border-gray-200"}`}
+                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-950 ${errors.firstName ? "border-red-500" : "border-gray-200 dark:border-slate-700"}`}
                             />
                             {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
                         </div>
@@ -259,7 +259,7 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                                 placeholder="Smith"
                                 value={formData.lastName}
                                 onChange={handleChange}
-                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 ${errors.lastName ? "border-red-500" : "border-gray-200"}`}
+                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-950 ${errors.lastName ? "border-red-500" : "border-gray-200 dark:border-slate-700"}`}
                             />
                             {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
                         </div>
@@ -275,7 +275,7 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                                 placeholder="john@company.com"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 ${errors.email ? "border-red-500" : "border-gray-200"}`}
+                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-950 ${errors.email ? "border-red-500" : "border-gray-200 dark:border-slate-700"}`}
                             />
                             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                         </div>
@@ -291,7 +291,7 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                                 placeholder="EMP001"
                                 value={formData.empCode}
                                 onChange={handleChange}
-                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 ${errors.empCode ? "border-red-500" : "border-gray-200"}`}
+                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-950 ${errors.empCode ? "border-red-500" : "border-gray-200 dark:border-slate-700"}`}
                             />
                             {errors.empCode && <p className="text-red-500 text-sm mt-1">{errors.empCode}</p>}
                         </div>
@@ -307,23 +307,23 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                                 placeholder="9876543210"
                                 value={formData.phone}
                                 onChange={handleChange}
-                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 ${errors.phone ? "border-red-500" : "border-gray-200"}`}
+                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-950 ${errors.phone ? "border-red-500" : "border-gray-200 dark:border-slate-700"}`}
                             />
                             {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
                         </div>
 
                         {/* Department Dropdown */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-800 mb-1">
+                            <label className="block text-sm font-semibold text-gray-800 dark:text-slate-200 mb-1">
                                 Department <span className="text-red-500">*</span>
                             </label>
                             <div className="relative" ref={dropdownRef}>
                                 <button
                                     type="button"
                                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                    className={`flex w-full items-center justify-between rounded-lg border px-4 py-2.5 text-sm bg-gray-50 ${errors.departmentId ? "border-red-500" : "border-gray-200"}`}
+                                    className={`flex w-full items-center justify-between rounded-lg border px-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-950 ${errors.departmentId ? "border-red-500" : "border-gray-200 dark:border-slate-700"}`}
                                 >
-                                    <span className={selectedDepartment ? "text-gray-900" : "text-gray-400"}>
+                                    <span className={selectedDepartment ? "text-gray-900 dark:text-slate-100" : "text-gray-400 dark:text-slate-500"}>
                                         {selectedDepartment ? selectedDepartment.departmentName : "Select Department"}
                                     </span>
                                     <svg className={`h-4 w-4 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -332,17 +332,17 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                                 </button>
 
                                 {isDropdownOpen && (
-                                    <div className="absolute z-50 mt-1 w-full rounded-xl border border-gray-100 bg-white p-1.5 shadow-xl">
+                                    <div className="absolute z-50 mt-1 w-full rounded-xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-1.5 shadow-xl">
                                         <div className="max-h-60 overflow-y-auto">
                                             {departments.length === 0 ? (
-                                                <div className="px-4 py-2 text-sm text-gray-400">No departments found</div>
+                                                <div className="px-4 py-2 text-sm text-gray-400 dark:text-slate-500">No departments found</div>
                                             ) : (
                                                 departments.map((department) => (
                                                     <button
                                                         key={department.id}
                                                         type="button"
                                                         onClick={() => handleDepartmentSelect(department.id)}
-                                                        className={`w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-gray-50 ${formData.departmentId === department.id ? "bg-gray-50 font-medium" : ""}`}
+                                                        className={`w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-slate-800 ${formData.departmentId === department.id ? "bg-gray-50 dark:bg-slate-950 font-medium" : ""}`}
                                                     >
                                                         {department.departmentName}
                                                     </button>
@@ -357,7 +357,7 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
 
                         {/* Designation Dropdown */}
                         <div ref={designationContainerRef}>
-                            <label className="block text-sm font-semibold text-gray-800 mb-1">
+                            <label className="block text-sm font-semibold text-gray-800 dark:text-slate-200 mb-1">
                                 Role / Designation <span className="text-red-500">*</span>
                             </label>
                             <div className="relative" ref={destRef}>
@@ -373,9 +373,9 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                                         }
                                         setIsDestDropdownOpen(!isDestDropdownOpen);
                                     }}
-                                    className={`flex w-full items-center justify-between rounded-lg border px-4 py-2.5 text-sm ${errors.designationId ? "border-red-500" : "border-gray-200"} ${!formData.departmentId ? "bg-gray-100 cursor-not-allowed opacity-60" : "bg-gray-50"}`}
+                                    className={`flex w-full items-center justify-between rounded-lg border px-4 py-2.5 text-sm ${errors.designationId ? "border-red-500" : "border-gray-200 dark:border-slate-700"} ${!formData.departmentId ? "bg-gray-100 dark:bg-slate-800 cursor-not-allowed opacity-60" : "bg-gray-50 dark:bg-slate-950"}`}
                                 >
-                                    <span className={selectedDesignation ? "text-gray-900" : "text-gray-400"}>
+                                    <span className={selectedDesignation ? "text-gray-900 dark:text-slate-100" : "text-gray-400 dark:text-slate-500"}>
                                         {!formData.departmentId ? "Please select department first" : selectedDesignation?.designationName || "Select Designation"}
                                     </span>
                                     <svg className={`h-4 w-4 transition-transform ${isDestDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -384,10 +384,10 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                                 </button>
 
                                 {isDestDropdownOpen && formData.departmentId && (
-                                    <div className="absolute bottom-full mb-1 z-50 w-full rounded-xl border border-gray-100 bg-white p-1.5 shadow-xl">
+                                    <div className="absolute bottom-full mb-1 z-50 w-full rounded-xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-1.5 shadow-xl">
                                         <div className="max-h-48 overflow-y-auto">
                                             {designations.length === 0 ? (
-                                                <div className="px-4 py-2 text-sm text-gray-400">No Designations</div>
+                                                <div className="px-4 py-2 text-sm text-gray-400 dark:text-slate-500">No Designations</div>
                                             ) : (
                                                 designations.map((dest) => (
                                                     <button
@@ -398,7 +398,7 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                                                             setErrors(prev => ({ ...prev, designationId: "" }));
                                                             setIsDestDropdownOpen(false);
                                                         }}
-                                                        className="w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-gray-50"
+                                                        className="w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-slate-800"
                                                     >
                                                         {dest.designationName || dest.name}
                                                     </button>
@@ -413,16 +413,16 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
 
                         {/* Reporting Manager Dropdown */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-800 mb-1">
+                            <label className="block text-sm font-semibold text-gray-800 dark:text-slate-200 mb-1">
                                 Reporting Manager <span className="text-red-500">*</span>
                             </label>
                             <div className="relative" ref={managerRef}>
                                 <button
                                     type="button"
                                     onClick={() => setIsManagerDropdownOpen(!isManagerDropdownOpen)}
-                                    className={`flex w-full items-center justify-between rounded-lg border px-4 py-2.5 text-sm bg-gray-50 ${errors.managerId ? "border-red-500" : "border-gray-200"}`}
+                                    className={`flex w-full items-center justify-between rounded-lg border px-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-950 ${errors.managerId ? "border-red-500" : "border-gray-200 dark:border-slate-700"}`}
                                 >
-                                    <span className={selectedManager ? "text-gray-900" : "text-gray-400"}>
+                                    <span className={selectedManager ? "text-gray-900 dark:text-slate-100" : "text-gray-400 dark:text-slate-500"}>
                                         {selectedManager ? `${selectedManager.firstName} ${selectedManager.lastName}` : "Select Reporting Manager"}
                                     </span>
                                     <svg className={`h-4 w-4 transition-transform ${isManagerDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -431,10 +431,10 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                                 </button>
 
                                 {isManagerDropdownOpen && (
-                                    <div className="absolute z-50 mt-1 w-full rounded-xl border border-gray-100 bg-white p-1.5 shadow-xl">
+                                    <div className="absolute z-50 mt-1 w-full rounded-xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-1.5 shadow-xl">
                                         <div className="max-h-48 overflow-y-auto">
                                             {employees.length === 0 ? (
-                                                <div className="px-4 py-2 text-sm text-gray-400">No employees found</div>
+                                                <div className="px-4 py-2 text-sm text-gray-400 dark:text-slate-500">No employees found</div>
                                             ) : (
                                                 employees.map((emp) => (
                                                     <button
@@ -445,7 +445,7 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                                                             setErrors(prev => ({ ...prev, managerId: "" }));
                                                             setIsManagerDropdownOpen(false);
                                                         }}
-                                                        className={`w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-gray-50 ${formData.managerId === emp.id ? "bg-gray-50 font-medium" : ""}`}
+                                                        className={`w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-slate-800 ${formData.managerId === emp.id ? "bg-gray-50 dark:bg-slate-950 font-medium" : ""}`}
                                                     >
                                                         {emp.firstName} {emp.lastName} ({emp.employeeCode})
                                                     </button>
@@ -461,11 +461,11 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                     </div>
 
                     {/* Buttons Footer (Sticky at bottom) */}
-                    <div className="flex justify-end space-x-3 p-6 border-t border-gray-100 bg-white rounded-b-xl">
+                    <div className="flex justify-end space-x-3 p-6 border-t border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-b-xl">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium bg-white hover:bg-gray-50"
+                            className="rounded-lg border border-gray-300 dark:border-slate-600 px-5 py-2.5 text-sm font-medium bg-white dark:bg-slate-900 hover:bg-gray-50 dark:hover:bg-slate-800"
                         >
                             Cancel
                         </button>

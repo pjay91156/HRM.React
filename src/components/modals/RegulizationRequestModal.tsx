@@ -399,18 +399,18 @@ export default function AttendanceRegularizationModal({
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-            <div className="relative w-full max-w-4xl max-h-[90vh] flex flex-col bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-100">
+            <div className="relative w-full max-w-4xl max-h-[90vh] flex flex-col bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-100 dark:border-slate-800">
 
                 {/* Header */}
-                <div className="flex-shrink-0 px-8 py-6 flex items-center justify-between bg-slate-50 border-b border-slate-100">
+                <div className="flex-shrink-0 px-8 py-6 flex items-center justify-between bg-slate-50 dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800">
                     <div>
                         <div className="flex items-center gap-2 text-blue-600 bg-blue-100 px-3 py-1 rounded-md w-fit mb-2">
                             <CalendarDays size={16} />
                             <span className="text-xs font-bold uppercase tracking-wider">{attendanceDate}</span>
                         </div>
-                        <h2 className="text-2xl font-bold text-slate-900">Attendance Regularization</h2>
+                        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Attendance Regularization</h2>
                     </div>
-                    <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-lg transition-colors text-slate-500">
+                    <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-lg transition-colors text-slate-500 dark:text-slate-400">
                         <X size={20} />
                     </button>
                 </div>
@@ -422,7 +422,7 @@ export default function AttendanceRegularizationModal({
                         {/* Left Column: Sessions */}
                         <div className="flex flex-col gap-4">
                             <div className="flex items-center justify-between">
-                                <h3 className="font-semibold text-slate-900">Attendance Sessions</h3>
+                                <h3 className="font-semibold text-slate-900 dark:text-slate-100">Attendance Sessions</h3>
                                 <button onClick={handleAddSession} className="flex items-center gap-1 text-sm text-blue-600 font-medium hover:underline">
                                     <Plus size={16} /> Add Session
                                 </button>
@@ -430,25 +430,25 @@ export default function AttendanceRegularizationModal({
 
                             <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
                                 {sessions.map((session, index) => (
-                                    <div key={session.sessionId} className="flex items-center gap-3 border border-slate-200 rounded-xl p-3 bg-white shadow-sm">
-                                        <span className="text-[10px] font-bold text-slate-400 w-5">#{index + 1}</span>
+                                    <div key={session.sessionId} className="flex items-center gap-3 border border-slate-200 dark:border-slate-700 rounded-xl p-3 bg-white dark:bg-slate-900 shadow-sm">
+                                        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 w-5">#{index + 1}</span>
                                         <input type="time" value={session.checkIn} onChange={(e) =>
                                             handleTimeChange(
                                                 session.sessionId,
                                                 "checkIn",
                                                 e.target.value
                                             )
-                                        } className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2" />
-                                        <span className="text-slate-400 text-sm">to</span>
+                                        } className="w-full text-sm border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2" />
+                                        <span className="text-slate-400 dark:text-slate-500 text-sm">to</span>
                                         <input type="time" value={session.checkOut} onChange={(e) =>
                                             handleTimeChange(
                                                 session.sessionId,
                                                 "checkOut",
                                                 e.target.value
                                             )
-                                        } className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2" />
-                                        <span className="text-sm font-semibold text-slate-700 min-w-[50px] text-right">{formatWorkingHours(session.workingHours)}</span>
-                                        <button onClick={() => handleDeleteSession(session.sessionId)} className="text-slate-400 hover:text-red-600 transition"><Trash2 size={18} /></button>
+                                        } className="w-full text-sm border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2" />
+                                        <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 min-w-[50px] text-right">{formatWorkingHours(session.workingHours)}</span>
+                                        <button onClick={() => handleDeleteSession(session.sessionId)} className="text-slate-400 dark:text-slate-500 hover:text-red-600 transition"><Trash2 size={18} /></button>
                                     </div>
                                 ))}
                             </div>
@@ -462,19 +462,19 @@ export default function AttendanceRegularizationModal({
                         {/* Right Column: Reason + Summary */}
                         <div className="space-y-6">
                             <div>
-                                <label className="block text-sm font-semibold text-slate-900 mb-2">Reason for Regularization</label>
+                                <label className="block text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">Reason for Regularization</label>
                                 <textarea value={reason}
                                     onChange={(e) => setReason(e.target.value)}
-                                    className="w-full h-32 p-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm resize-none"
+                                    className="w-full h-32 p-3 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm resize-none"
                                     placeholder="Explain why you are requesting this change..."
                                     maxLength={500}
                                 />
                             </div>
 
-                            <div className="border border-slate-200 rounded-xl p-5 bg-white shadow-sm">
-                                <div className="flex justify-between items-center py-2 border-b border-slate-100">
-                                    <span className="text-sm text-slate-500">Current Total</span>
-                                    <span className="font-bold text-slate-900">{formatWorkingHours(attendanceData?.totalWorkingHours)}</span>
+                            <div className="border border-slate-200 dark:border-slate-700 rounded-xl p-5 bg-white dark:bg-slate-900 shadow-sm">
+                                <div className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-800">
+                                    <span className="text-sm text-slate-500 dark:text-slate-400">Current Total</span>
+                                    <span className="font-bold text-slate-900 dark:text-slate-100">{formatWorkingHours(attendanceData?.totalWorkingHours)}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-2">
                                     <span className="text-sm text-emerald-700 font-semibold">After Approval</span>
@@ -486,8 +486,8 @@ export default function AttendanceRegularizationModal({
                 </div>
 
                 {/* Footer */}
-                <div className="flex-shrink-0 border-t border-slate-200 p-6 flex justify-end gap-3 bg-slate-50">
-                    <button onClick={onClose} className="px-6 py-2 text-sm font-medium border border-slate-300 rounded-lg hover:bg-slate-100 transition">Cancel</button>
+                <div className="flex-shrink-0 border-t border-slate-200 dark:border-slate-700 p-6 flex justify-end gap-3 bg-slate-50 dark:bg-slate-950">
+                    <button onClick={onClose} className="px-6 py-2 text-sm font-medium border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-100 transition">Cancel</button>
                     <button onClick={handleSubmit } className="px-6 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">Submit Request</button>
                 </div>
             </div>

@@ -146,10 +146,10 @@ const LeaveRequest: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
+                    <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
                         Apply Leave
                     </h1>
-                    <p className="text-sm text-slate-500 mt-0.5">
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
                         Fill the details to apply for leave
                     </p>
                 </div>
@@ -158,7 +158,7 @@ const LeaveRequest: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                 {/* FORM */}
-                <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+                <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 
@@ -167,7 +167,7 @@ const LeaveRequest: React.FC = () => {
 
                             {/* Leave Type */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-800 mb-1">
+                                <label className="block text-sm font-semibold text-gray-800 dark:text-slate-200 mb-1">
                                     Leave Type <span className="text-red-500">*</span>
                                 </label>
 
@@ -175,9 +175,9 @@ const LeaveRequest: React.FC = () => {
                                     {...register("leaveTypeId", {
                                         required: "Leave Type is required"
                                     })}
-                                    className={`w-full rounded-lg border bg-white px-4 py-2.5 text-sm shadow-sm ${errors.leaveTypeId
+                                    className={`w-full rounded-lg border bg-white dark:bg-slate-900 px-4 py-2.5 text-sm shadow-sm ${errors.leaveTypeId
                                         ? "border-red-500"
-                                        : "border-slate-200"
+                                        : "border-slate-200 dark:border-slate-700"
                                         }`}
                                 >
                                     <option value="">Select Leave Type</option>
@@ -197,7 +197,7 @@ const LeaveRequest: React.FC = () => {
 
                             {/* Leave Duration */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-800 mb-1">
+                                <label className="block text-sm font-semibold text-gray-800 dark:text-slate-200 mb-1">
                                     Leave Duration
                                 </label>
 
@@ -206,7 +206,7 @@ const LeaveRequest: React.FC = () => {
                                         valueAsNumber: true,
                                         required: "Leave Duration is required"
                                     })}
-                                    className={`w-full rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm shadow-sm ${errors.leaveDuration ? "border-red-500" : ""
+                                    className={`w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm shadow-sm ${errors.leaveDuration ? "border-red-500" : ""
                                         }`}
                                 >
                                     <option value="">Select Leave Duration</option>
@@ -229,7 +229,7 @@ const LeaveRequest: React.FC = () => {
 
                             {/* From Date */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-800 mb-1">
+                                <label className="block text-sm font-semibold text-gray-800 dark:text-slate-200 mb-1">
                                     From Date <span className="text-red-500">*</span>
                                 </label>
 
@@ -237,13 +237,13 @@ const LeaveRequest: React.FC = () => {
                                     <button
                                         type="button"
                                         onClick={openFromDatePicker}
-                                        className={`w-full flex items-center gap-2 rounded-lg border bg-white px-4 py-2.5 text-sm shadow-sm text-left ${errors.fromDate
+                                        className={`w-full flex items-center gap-2 rounded-lg border bg-white dark:bg-slate-900 px-4 py-2.5 text-sm shadow-sm text-left ${errors.fromDate
                                             ? "border-red-500"
-                                            : "border-slate-200"
+                                            : "border-slate-200 dark:border-slate-700"
                                             }`}
                                     >
                                         <CalendarDays size={16} className="text-indigo-600 shrink-0" />
-                                        <span className={fromDate ? "text-slate-800" : "text-slate-400"}>
+                                        <span className={fromDate ? "text-slate-800 dark:text-slate-200" : "text-slate-400 dark:text-slate-500"}>
                                             {formatDate(fromDate)}
                                         </span>
                                     </button>
@@ -268,7 +268,7 @@ const LeaveRequest: React.FC = () => {
 
                             {/* To Date */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-800 mb-1">
+                                <label className="block text-sm font-semibold text-gray-800 dark:text-slate-200 mb-1">
                                     To Date <span className="text-red-500">*</span>
                                 </label>
 
@@ -276,13 +276,13 @@ const LeaveRequest: React.FC = () => {
                                     <button
                                         type="button"
                                         onClick={openToDatePicker}
-                                        className={`w-full flex items-center gap-2 rounded-lg border bg-white px-4 py-2.5 text-sm shadow-sm text-left ${errors.toDate
+                                        className={`w-full flex items-center gap-2 rounded-lg border bg-white dark:bg-slate-900 px-4 py-2.5 text-sm shadow-sm text-left ${errors.toDate
                                             ? "border-red-500"
-                                            : "border-slate-200"
+                                            : "border-slate-200 dark:border-slate-700"
                                             }`}
                                     >
                                         <CalendarDays size={16} className="text-indigo-600 shrink-0" />
-                                        <span className={toDate ? "text-slate-800" : "text-slate-400"}>
+                                        <span className={toDate ? "text-slate-800 dark:text-slate-200" : "text-slate-400 dark:text-slate-500"}>
                                             {formatDate(toDate)}
                                         </span>
                                     </button>
@@ -309,20 +309,20 @@ const LeaveRequest: React.FC = () => {
 
                         {/* Total Days */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-800 mb-1">
+                            <label className="block text-sm font-semibold text-gray-800 dark:text-slate-200 mb-1">
                                 Total Days
                             </label>
 
                             <input
                                 value={totalDays}
                                 readOnly
-                                className="w-full rounded-lg border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm"
+                                className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-4 py-2.5 text-sm"
                             />
                         </div>
 
                         {/* Reason */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-800 mb-1">
+                            <label className="block text-sm font-semibold text-gray-800 dark:text-slate-200 mb-1">
                                 Reason <span className="text-red-500">*</span>
                             </label>
 
@@ -333,7 +333,7 @@ const LeaveRequest: React.FC = () => {
                                 })}
                                 className={`w-full rounded-lg border px-4 py-3 text-sm shadow-sm resize-none ${errors.reason
                                     ? "border-red-500"
-                                    : "border-slate-200"
+                                    : "border-slate-200 dark:border-slate-700"
                                     }`}
                             />
 
@@ -359,8 +359,8 @@ const LeaveRequest: React.FC = () => {
 
                 {/* BALANCE (UNCHANGED) */}
                 {/* BALANCE */}
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-                    <h2 className="text-lg font-semibold text-slate-900 mb-6">
+                <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6">
+                    <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-6">
                         Leave Balance
                     </h2>
 
@@ -372,9 +372,9 @@ const LeaveRequest: React.FC = () => {
                                     {/* You can use Lucide-React icons here */}
                                     <span>📅</span>
                                 </div>
-                                <span className="text-sm font-medium text-slate-600">Casual Leave</span>
+                                <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Casual Leave</span>
                             </div>
-                            <p className="text-2xl font-bold text-slate-900">8.5 <span className="text-sm font-normal text-slate-500">of 12 days</span></p>
+                            <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">8.5 <span className="text-sm font-normal text-slate-500 dark:text-slate-400">of 12 days</span></p>
                         </div>
 
                         {/* Sick Leave */}
@@ -383,9 +383,9 @@ const LeaveRequest: React.FC = () => {
                                 <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
                                     <span>💊</span>
                                 </div>
-                                <span className="text-sm font-medium text-slate-600">Sick Leave</span>
+                                <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Sick Leave</span>
                             </div>
-                            <p className="text-2xl font-bold text-slate-900">6 <span className="text-sm font-normal text-slate-500">of 10 days</span></p>
+                            <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">6 <span className="text-sm font-normal text-slate-500 dark:text-slate-400">of 10 days</span></p>
                         </div>
 
                         {/* Earned Leave */}
@@ -394,9 +394,9 @@ const LeaveRequest: React.FC = () => {
                                 <div className="p-2 bg-emerald-100 rounded-lg text-emerald-600">
                                     <span>⭐</span>
                                 </div>
-                                <span className="text-sm font-medium text-slate-600">Earned Leave</span>
+                                <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Earned Leave</span>
                             </div>
-                            <p className="text-2xl font-bold text-slate-900">12 <span className="text-sm font-normal text-slate-500">of 18 days</span></p>
+                            <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">12 <span className="text-sm font-normal text-slate-500 dark:text-slate-400">of 18 days</span></p>
                         </div>
                     </div>
                 </div>

@@ -67,12 +67,12 @@ const AddLeaveTypeModal: React.FC<AddLeaveTypeModalProps> = ({ isOpen, onClose, 
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-[1px]">
-            <div className="relative w-full max-w-lg rounded-xl bg-white shadow-xl border border-gray-100">
+            <div className="relative w-full max-w-lg rounded-xl bg-white dark:bg-slate-900 shadow-xl border border-gray-100 dark:border-slate-800">
 
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 pb-4 border-b border-gray-100">
-                    <h2 className="text-xl font-bold text-gray-900">Add Leave Type</h2>
-                    <button type="button" onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">✕</button>
+                <div className="flex items-center justify-between p-6 pb-4 border-b border-gray-100 dark:border-slate-800">
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">Add Leave Type</h2>
+                    <button type="button" onClick={onClose} className="text-gray-400 dark:text-slate-500 hover:text-gray-600 transition-colors">✕</button>
                 </div>
 
                 <form onSubmit={handleSubmit}>
@@ -85,7 +85,7 @@ const AddLeaveTypeModal: React.FC<AddLeaveTypeModalProps> = ({ isOpen, onClose, 
                                 value={formData.leaveName}
                                 onChange={handleChange}
                                 placeholder="e.g. Sick Leave"
-                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 ${errors.leaveName ? "border-red-500" : "border-gray-200"}`}
+                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-950 ${errors.leaveName ? "border-red-500" : "border-gray-200 dark:border-slate-700"}`}
                             />
                             {errors.leaveName && <p className="text-red-500 text-sm mt-1">{errors.leaveName}</p>}
                         </div>
@@ -98,7 +98,7 @@ const AddLeaveTypeModal: React.FC<AddLeaveTypeModalProps> = ({ isOpen, onClose, 
                                 value={formData.leaveCode}
                                 onChange={handleChange}
                                 placeholder="e.g. SL"
-                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 ${errors.leaveCode ? "border-red-500" : "border-gray-200"}`}
+                                className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-950 ${errors.leaveCode ? "border-red-500" : "border-gray-200 dark:border-slate-700"}`}
                             />
                             {errors.leaveCode && <p className="text-red-500 text-sm mt-1">{errors.leaveCode}</p>}
                         </div>
@@ -110,7 +110,7 @@ const AddLeaveTypeModal: React.FC<AddLeaveTypeModalProps> = ({ isOpen, onClose, 
                                 name="description"
                                 value={formData.description}
                                 onChange={handleChange}
-                                className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm bg-gray-50"
+                                className="w-full rounded-lg border border-gray-200 dark:border-slate-700 px-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-950"
                                 rows={2}
                             />
                         </div>
@@ -124,7 +124,7 @@ const AddLeaveTypeModal: React.FC<AddLeaveTypeModalProps> = ({ isOpen, onClose, 
                                     name="defaultDays"
                                     value={formData.defaultDays}
                                     onChange={handleChange}
-                                    className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 ${errors.defaultDays ? "border-red-500" : "border-gray-200"}`}
+                                    className={`w-full rounded-lg border px-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-950 ${errors.defaultDays ? "border-red-500" : "border-gray-200 dark:border-slate-700"}`}
                                 />
                             </div>
                             <div>
@@ -133,7 +133,7 @@ const AddLeaveTypeModal: React.FC<AddLeaveTypeModalProps> = ({ isOpen, onClose, 
                                     name="status"
                                     value={formData.status}
                                     onChange={handleChange}
-                                    className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm bg-gray-50"
+                                    className="w-full rounded-lg border border-gray-200 dark:border-slate-700 px-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-950"
                                 >
                                     <option value="Active">Active</option>
                                     <option value="Inactive">Inactive</option>
@@ -143,11 +143,11 @@ const AddLeaveTypeModal: React.FC<AddLeaveTypeModalProps> = ({ isOpen, onClose, 
                     </div>
 
                     {/* Footer */}
-                    <div className="flex justify-end space-x-3 p-6 border-t border-gray-100 bg-white rounded-b-xl">
+                    <div className="flex justify-end space-x-3 p-6 border-t border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-b-xl">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="rounded-lg border border-gray-300 px-5 py-2.5 text-sm font-medium bg-white hover:bg-gray-50"
+                            className="rounded-lg border border-gray-300 dark:border-slate-600 px-5 py-2.5 text-sm font-medium bg-white dark:bg-slate-900 hover:bg-gray-50 dark:hover:bg-slate-800"
                         >
                             Cancel
                         </button>

@@ -53,15 +53,15 @@ const RegularizeAttendance: React.FC = () => {
             {/* HEADER */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">Attendance</h1>
-                    <p className="text-sm text-slate-500 mt-0.5">Manage and regularize your daily sessions</p>
+                    <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Attendance</h1>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">Manage and regularize your daily sessions</p>
                 </div>
                 <div className="flex items-center gap-4">
                     <div className="relative">
                         <button
                             type="button"
                             onClick={openDatePicker}
-                            className="inline-flex items-center gap-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium px-4 py-2.5 rounded-xl hover:border-indigo-300 transition-all shadow-sm"
+                            className="inline-flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium px-4 py-2.5 rounded-xl hover:border-indigo-300 transition-all shadow-sm"
                         >
                             <CalendarDays size={16} className="text-indigo-600" />
                             {new Date(selectedDate).toLocaleDateString("en-US", {
@@ -89,9 +89,9 @@ const RegularizeAttendance: React.FC = () => {
             </div>
 
             {/* TABLE CONTAINER */}
-            <div className="relative bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <div className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden shadow-sm">
                 {isLoading && (
-                    <div className="absolute inset-x-0 bottom-0 top-[45px] z-40 bg-white/60 backdrop-blur-[1px] transition-all">
+                    <div className="absolute inset-x-0 bottom-0 top-[45px] z-40 bg-white/60 dark:bg-slate-900/60 backdrop-blur-[1px] transition-all">
                         <Loader />
                     </div>
                 )}
@@ -99,19 +99,19 @@ const RegularizeAttendance: React.FC = () => {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="relative z-30 bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                            <tr className="relative z-30 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                                 <th className="py-3.5 px-6 font-semibold">Session</th>
                                 <th className="py-3.5 px-4 font-semibold">Check In</th>
                                 <th className="py-3.5 px-4 font-semibold">Check Out</th>
                                 <th className="py-3.5 px-6 font-semibold text-right">Duration</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100">
+                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                             {attendanceData?.sessions.map((session, i) => (
                                 <tr key={i} className="group hover:bg-slate-50/70 transition-colors">
-                                    <td className="py-4 px-6 font-medium text-slate-900 text-sm">Session #{i + 1}</td>
-                                    <td className="py-4 px-4 text-sm text-slate-600">{formatTime(session.checkIn)}</td>
-                                    <td className="py-4 px-4 text-sm text-slate-600">{formatTime(session.checkOut)}</td>
+                                    <td className="py-4 px-6 font-medium text-slate-900 dark:text-slate-100 text-sm">Session #{i + 1}</td>
+                                    <td className="py-4 px-4 text-sm text-slate-600 dark:text-slate-400">{formatTime(session.checkIn)}</td>
+                                    <td className="py-4 px-4 text-sm text-slate-600 dark:text-slate-400">{formatTime(session.checkOut)}</td>
                                     <td className="py-4 px-6 text-sm font-bold text-indigo-600 text-right">
                                         {formatWorkingHours(session.workingHours)}
                                     </td>
@@ -119,7 +119,7 @@ const RegularizeAttendance: React.FC = () => {
                             ))}
                             {!isLoading && (!attendanceData?.sessions || attendanceData.sessions.length === 0) && (
                                 <tr>
-                                    <td colSpan={4} className="p-16 text-center text-slate-400 text-sm">
+                                    <td colSpan={4} className="p-16 text-center text-slate-400 dark:text-slate-500 text-sm">
                                         No attendance sessions found for this date.
                                     </td>
                                 </tr>
@@ -127,7 +127,7 @@ const RegularizeAttendance: React.FC = () => {
                         </tbody>
                         <tfoot className="bg-slate-50/50">
                             <tr>
-                                <td colSpan={3} className="px-6 py-4 text-sm font-semibold text-slate-900">Total Working Hours</td>
+                                <td colSpan={3} className="px-6 py-4 text-sm font-semibold text-slate-900 dark:text-slate-100">Total Working Hours</td>
                                 <td className="px-6 py-4 text-sm font-bold text-indigo-700 text-right">
                                     {formatWorkingHours(attendanceData?.totalWorkingHours)}
                                 </td>

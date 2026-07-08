@@ -8,6 +8,7 @@ import {
 } from "recharts";
 
 import {getDepartmentChart} from "../../services/dashboardService"
+import { useTheme } from "../../context/ThemeContext";
 
 const COLORS = [
   "#6366F1",
@@ -19,6 +20,8 @@ const COLORS = [
 
 const DepartmentChart = () => {
   const [data, setData] = useState<any[]>([]);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   useEffect(() => {
     loadChart();
@@ -41,14 +44,14 @@ const DepartmentChart = () => {
   );
 
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-6">
+    <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
 
       <div className="mb-6">
-        <h3 className="text-xl font-bold text-slate-900">
+        <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">
           By Department
         </h3>
 
-        <p className="text-slate-500">
+        <p className="text-slate-500 dark:text-slate-400">
           {totalEmployees} total employees
         </p>
       </div>
@@ -72,7 +75,14 @@ const DepartmentChart = () => {
               ))}
             </Pie>
 
-            <Tooltip />
+            <Tooltip
+              contentStyle={{
+                background: isDark ? "#0f172a" : "#fff",
+                borderRadius: "12px",
+                border: isDark ? "1px solid #1e293b" : "1px solid #E2E8F0",
+                color: isDark ? "#e2e8f0" : "#0f172a",
+              }}
+            />
           </PieChart>
         </ResponsiveContainer>
       </div>
@@ -92,12 +102,12 @@ const DepartmentChart = () => {
                 }}
               />
 
-              <span className="text-slate-600">
+              <span className="text-slate-600 dark:text-slate-400">
                 {item.departmentName}
               </span>
             </div>
 
-            <span className="font-medium text-slate-800">
+            <span className="font-medium text-slate-800 dark:text-slate-200">
               {item.employeeCount}
             </span>
           </div>

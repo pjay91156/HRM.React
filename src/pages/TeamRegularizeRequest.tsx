@@ -208,20 +208,20 @@ const TeamLeaveRequests: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6 lg:p-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-6 lg:p-8">
       <div className="mx-auto max-w-7xl space-y-6">
-        <div className="flex flex-col gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex flex-col gap-4 rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm lg:flex-row lg:items-end lg:justify-between">
           <div>
             <div className="mb-2 flex items-center gap-2 text-sm font-medium text-indigo-600">
               <Sparkles size={16} />
               Attendance Regularization Requests
             </div>
-            <h1 className="text-2xl font-semibold text-slate-900">Review and act on team regularization requests</h1>
-            <p className="mt-1 text-sm text-slate-500">Track attendance changes, review employee reasons, and approve or reject requests in one place.</p>
+            <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Review and act on team regularization requests</h1>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Track attendance changes, review employee reasons, and approve or reject requests in one place.</p>
           </div>
-          <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
+          <div className="rounded-2xl bg-slate-50 dark:bg-slate-950 px-4 py-3 text-sm text-slate-600 dark:text-slate-400">
             <div className="flex items-center gap-2"><CalendarDays size={16} className="text-indigo-500" /> Today’s review queue</div>
-            <div className="mt-1 font-semibold text-slate-900">{summary.pending} pending approvals</div>
+            <div className="mt-1 font-semibold text-slate-900 dark:text-slate-100">{summary.pending} pending approvals</div>
           </div>
         </div>
 
@@ -240,26 +240,26 @@ const TeamLeaveRequests: React.FC = () => {
           </div>
         </div>
 
-        <div className="rounded-3xl border border-slate-200 bg-white shadow-sm">
-          <div className="flex flex-col gap-3 border-b border-slate-200 p-4 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="rounded-3xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm">
+          <div className="flex flex-col gap-3 border-b border-slate-200 dark:border-slate-700 p-4 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-slate-900">Regularization queue</h2>
-              <p className="text-sm text-slate-500">Review employee attendance adjustments and take action quickly.</p>
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Regularization queue</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Review employee attendance adjustments and take action quickly.</p>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <div className="relative w-full sm:w-72">
-                <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 dark:text-slate-500" />
                 <input
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-sm outline-none focus:border-indigo-500 focus:bg-white"
+                  className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 py-2.5 pl-10 pr-3 text-sm outline-none focus:border-indigo-500 focus:bg-white"
                   placeholder="Search employee or reason"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </div>
 
-              <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600">
-                <Filter size={16} className="text-slate-400" />
+              <div className="flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-3 py-2 text-sm text-slate-600 dark:text-slate-400">
+                <Filter size={16} className="text-slate-400 dark:text-slate-500" />
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
@@ -277,24 +277,24 @@ const TeamLeaveRequests: React.FC = () => {
           {loading ? (
             <div className="flex min-h-[220px] items-center justify-center"><Loader /></div>
           ) : filtered.length === 0 ? (
-            <div className="flex min-h-[220px] items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 m-4 text-sm text-slate-500">
+            <div className="flex min-h-[220px] items-center justify-center rounded-2xl border border-dashed border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 m-4 text-sm text-slate-500 dark:text-slate-400">
               No regularization requests found.
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-slate-200 text-left">
-                <thead className="bg-slate-50">
+              <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-left">
+                <thead className="bg-slate-50 dark:bg-slate-950">
                   <tr>
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Employee</th>
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Attendance Date</th>
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Requested On</th>
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Changes</th>
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Reason</th>
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Status</th>
-                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Action</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Employee</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Attendance Date</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Requested On</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Changes</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Reason</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Status</th>
+                    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 bg-white">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
                   {filtered.map((item) => (
                     <tr key={item.attendanceId} className="hover:bg-slate-50/80">
                       <td className="px-4 py-4">
@@ -303,23 +303,23 @@ const TeamLeaveRequests: React.FC = () => {
                             <User size={16} />
                           </div>
                           <div>
-                            <div className="font-medium text-slate-900">{item.employeeName}</div>
-                            <div className="text-sm text-slate-500">{item.employeeCode}</div>
+                            <div className="font-medium text-slate-900 dark:text-slate-100">{item.employeeName}</div>
+                            <div className="text-sm text-slate-500 dark:text-slate-400">{item.employeeCode}</div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-4 text-sm text-slate-600">{new Date(item.attendanceDate).toLocaleDateString()}</td>
-                      <td className="px-4 py-4 text-sm text-slate-600">{new Date(item.requestedOn).toLocaleString()}</td>
+                      <td className="px-4 py-4 text-sm text-slate-600 dark:text-slate-400">{new Date(item.attendanceDate).toLocaleDateString()}</td>
+                      <td className="px-4 py-4 text-sm text-slate-600 dark:text-slate-400">{new Date(item.requestedOn).toLocaleString()}</td>
                       <td className="px-4 py-4">
                         <div className="flex flex-wrap gap-2">
                           {item.changeTypes.split(", ").map((change) => (
-                            <span key={change} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+                            <span key={change} className="rounded-full bg-slate-100 dark:bg-slate-800 px-2.5 py-1 text-xs font-medium text-slate-600 dark:text-slate-400">
                               {change}
                             </span>
                           ))}
                         </div>
                       </td>
-                      <td className="max-w-xs px-4 py-4 text-sm text-slate-600">
+                      <td className="max-w-xs px-4 py-4 text-sm text-slate-600 dark:text-slate-400">
                         <div className="line-clamp-2">{item.reason}</div>
                       </td>
                       <td className="px-4 py-4">
@@ -329,7 +329,7 @@ const TeamLeaveRequests: React.FC = () => {
                       </td>
                       <td className="px-4 py-4">
                         <div className="flex flex-wrap gap-2">
-                          <button onClick={() => handleViewDetails(item)} className="rounded-lg border border-slate-200 bg-white p-2 text-slate-600 hover:bg-slate-100" title="View details">
+                          <button onClick={() => handleViewDetails(item)} className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100" title="View details">
                             <Eye size={16} />
                           </button>
                           {item.status.toLowerCase() === "pending" && (
@@ -355,31 +355,31 @@ const TeamLeaveRequests: React.FC = () => {
 
       {detailsOpen && (
         <div className="fixed inset-0 z-[60] flex justify-end bg-black/40">
-          <div className="flex h-full w-full max-w-2xl flex-col bg-white shadow-2xl">
-            <div className="flex items-start justify-between border-b border-slate-200 px-6 py-5">
+          <div className="flex h-full w-full max-w-2xl flex-col bg-white dark:bg-slate-900 shadow-2xl">
+            <div className="flex items-start justify-between border-b border-slate-200 dark:border-slate-700 px-6 py-5">
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 text-base font-semibold text-indigo-700">
                   {getInitials(detailsData?.employeeName || "Employee")}
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-slate-900">{detailsData?.employeeName || "Regularization details"}</h3>
-                  <p className="text-sm text-slate-500">{detailsData?.departmentName}</p>
-                  <p className="text-xs text-slate-400">Employee ID: {detailsData?.employeeCode}</p>
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{detailsData?.employeeName || "Regularization details"}</h3>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">{detailsData?.departmentName}</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500">Employee ID: {detailsData?.employeeCode}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 {detailsData && (
                   <div className="text-right text-sm">
-                    <div className="text-slate-500">Attendance Date</div>
-                    <div className="font-medium text-slate-900">{new Date(detailsData.attendanceDate).toLocaleDateString()}</div>
-                    <div className="mt-1 text-slate-500">Submitted On</div>
-                    <div className="font-medium text-slate-900">{new Date(detailsData.requestedOn).toLocaleString()}</div>
+                    <div className="text-slate-500 dark:text-slate-400">Attendance Date</div>
+                    <div className="font-medium text-slate-900 dark:text-slate-100">{new Date(detailsData.attendanceDate).toLocaleDateString()}</div>
+                    <div className="mt-1 text-slate-500 dark:text-slate-400">Submitted On</div>
+                    <div className="font-medium text-slate-900 dark:text-slate-100">{new Date(detailsData.requestedOn).toLocaleString()}</div>
                   </div>
                 )}
                 <button
                   type="button"
                   onClick={closeDetailsPanel}
-                  className="rounded-full border border-slate-200 p-2 text-slate-500 hover:bg-slate-100"
+                  className="rounded-full border border-slate-200 dark:border-slate-700 p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100"
                 >
                   ×
                 </button>
@@ -393,9 +393,9 @@ const TeamLeaveRequests: React.FC = () => {
                 <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{detailsError}</div>
               ) : detailsData ? (
                 <div className="space-y-5">
-                  <div className="rounded-2xl border border-indigo-100 bg-indigo-50 p-4">
+                  <div className="rounded-2xl border border-indigo-100 bg-indigo-50 dark:bg-indigo-500/10 p-4">
                     <div className="text-xs font-semibold uppercase tracking-wide text-indigo-500">Reason</div>
-                    <p className="mt-1 text-sm leading-6 text-slate-700">{detailsData.reason}</p>
+                    <p className="mt-1 text-sm leading-6 text-slate-700 dark:text-slate-300">{detailsData.reason}</p>
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-2">
@@ -410,24 +410,24 @@ const TeamLeaveRequests: React.FC = () => {
                   </div>
 
                   <div>
-                    <div className="mb-2 text-sm font-semibold text-slate-700">Existing Sessions (Current)</div>
-                    <div className="overflow-x-auto rounded-2xl border border-slate-200">
-                      <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
-                        <thead className="bg-slate-50">
+                    <div className="mb-2 text-sm font-semibold text-slate-700 dark:text-slate-300">Existing Sessions (Current)</div>
+                    <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-700">
+                      <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-left text-sm">
+                        <thead className="bg-slate-50 dark:bg-slate-950">
                           <tr>
-                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Session</th>
-                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Check In</th>
-                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Check Out</th>
-                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Working Time</th>
+                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Session</th>
+                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Check In</th>
+                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Check Out</th>
+                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Working Time</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100 bg-white">
+                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
                           {detailsData.existingSessions.map((session) => (
                             <tr key={session.sessionNumber}>
-                              <td className="px-4 py-2 text-slate-700">{session.sessionNumber}</td>
-                              <td className="px-4 py-2 text-slate-700">{session.checkIn}</td>
-                              <td className="px-4 py-2 text-slate-700">{session.checkOut}</td>
-                              <td className="px-4 py-2 text-slate-700">{session.workingTime}</td>
+                              <td className="px-4 py-2 text-slate-700 dark:text-slate-300">{session.sessionNumber}</td>
+                              <td className="px-4 py-2 text-slate-700 dark:text-slate-300">{session.checkIn}</td>
+                              <td className="px-4 py-2 text-slate-700 dark:text-slate-300">{session.checkOut}</td>
+                              <td className="px-4 py-2 text-slate-700 dark:text-slate-300">{session.workingTime}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -437,23 +437,23 @@ const TeamLeaveRequests: React.FC = () => {
 
                   <div>
                     <div className="mb-2 flex items-center justify-between">
-                      <div className="text-sm font-semibold text-slate-700">Requested Changes</div>
+                      <div className="text-sm font-semibold text-slate-700 dark:text-slate-300">Requested Changes</div>
                       <span className={`rounded-full px-3 py-1 text-xs font-medium ${getStatusBadge(detailsData.status)}`}>
                         {detailsData.status}
                       </span>
                     </div>
-                    <div className="overflow-x-auto rounded-2xl border border-slate-200">
-                      <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
-                        <thead className="bg-slate-50">
+                    <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-700">
+                      <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-left text-sm">
+                        <thead className="bg-slate-50 dark:bg-slate-950">
                           <tr>
-                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Action</th>
-                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Session</th>
-                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Current</th>
-                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Requested</th>
-                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Change</th>
+                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Action</th>
+                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Session</th>
+                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Current</th>
+                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Requested</th>
+                            <th className="px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Change</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100 bg-white">
+                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
                           {detailsData.changes.map((change, index) => (
                             <tr key={`${change.changeType}-${index}`}>
                               <td className="px-4 py-2">
@@ -461,13 +461,13 @@ const TeamLeaveRequests: React.FC = () => {
                                   {change.changeType}
                                 </span>
                               </td>
-                              <td className="px-4 py-2 text-slate-700">
+                              <td className="px-4 py-2 text-slate-700 dark:text-slate-300">
                                 {change.sessionNumber}
                                 {change.isNewSession ? " (New)" : ""}
                               </td>
-                              <td className="px-4 py-2 text-slate-700">{change.current}</td>
-                              <td className="px-4 py-2 text-slate-700">{change.requested}</td>
-                              <td className="px-4 py-2 text-slate-700">{change.changeDescription}</td>
+                              <td className="px-4 py-2 text-slate-700 dark:text-slate-300">{change.current}</td>
+                              <td className="px-4 py-2 text-slate-700 dark:text-slate-300">{change.requested}</td>
+                              <td className="px-4 py-2 text-slate-700 dark:text-slate-300">{change.changeDescription}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -477,13 +477,13 @@ const TeamLeaveRequests: React.FC = () => {
 
                   {detailsData.status === "Pending" && (
                     <div>
-                      <label className="mb-2 block text-sm font-semibold text-slate-700">Manager Comment</label>
+                      <label className="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Manager Comment</label>
                       <textarea
                         rows={3}
                         value={panelComment}
                         onChange={(e) => setPanelComment(e.target.value)}
                         placeholder="Enter your comment..."
-                        className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                        className="w-full rounded-xl border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                       />
                       {panelActionError && (
                         <div className="mt-2 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
@@ -497,7 +497,7 @@ const TeamLeaveRequests: React.FC = () => {
             </div>
 
             {detailsData?.status === "Pending" && (
-              <div className="flex justify-end gap-3 border-t border-slate-200 px-6 py-4">
+              <div className="flex justify-end gap-3 border-t border-slate-200 dark:border-slate-700 px-6 py-4">
                 <button
                   type="button"
                   disabled={panelActionLoading}
@@ -523,19 +523,19 @@ const TeamLeaveRequests: React.FC = () => {
 
       {modalOpen && selectedRequest && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white shadow-2xl">
-            <div className="flex items-center gap-3 border-b border-slate-200 px-6 py-5">
+          <div className="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 shadow-2xl">
+            <div className="flex items-center gap-3 border-b border-slate-200 dark:border-slate-700 px-6 py-5">
               <div className={`rounded-xl p-2 ${actionType === "approve" ? "bg-emerald-50 text-emerald-600" : "bg-rose-50 text-rose-600"}`}>
                 {actionType === "approve" ? <CheckCircle size={20} /> : <XCircle size={20} />}
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-slate-900">{actionType === "approve" ? "Approve" : "Reject"} Regularization</h3>
-                <p className="text-sm text-slate-500">{selectedRequest.employeeName}</p>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{actionType === "approve" ? "Approve" : "Reject"} Regularization</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{selectedRequest.employeeName}</p>
               </div>
             </div>
 
             <div className="px-6 py-5">
-              <p className="mb-4 text-sm text-slate-600">
+              <p className="mb-4 text-sm text-slate-600 dark:text-slate-400">
                 Decide whether to allow this attendance adjustment request and leave an optional note for the employee.
               </p>
               {actionError && (
@@ -548,17 +548,17 @@ const TeamLeaveRequests: React.FC = () => {
                 value={comments}
                 onChange={(e) => setComments(e.target.value)}
                 placeholder={actionType === "approve" ? "Optional comments" : "Reason for rejection"}
-                className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                className="w-full rounded-xl border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
               />
             </div>
 
-            <div className="flex flex-col-reverse justify-end gap-3 border-t border-slate-200 px-6 py-4 sm:flex-row">
+            <div className="flex flex-col-reverse justify-end gap-3 border-t border-slate-200 dark:border-slate-700 px-6 py-4 sm:flex-row">
               <button type="button" onClick={() => {
                 setModalOpen(false);
                 setSelectedRequest(null);
                 setComments("");
                 setActionError(null);
-              }} className="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
+              }} className="rounded-xl border border-slate-300 dark:border-slate-600 px-5 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800">
                 Cancel
               </button>
               <button type="button" onClick={handleConfirmAction} disabled={actionLoading} className={`flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium text-white ${actionType === "approve" ? "bg-emerald-600 hover:bg-emerald-700" : "bg-rose-600 hover:bg-rose-700"}`}>
