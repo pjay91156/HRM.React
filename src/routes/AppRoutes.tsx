@@ -16,6 +16,7 @@ import MyAttendance from "../pages/MyAttendance";
 import TeamAttendance from "../pages/TeamAttendance";
 import RegularizeAttendance from "../pages/RegularizeAttendance";
 import TeamRegularizeAttendanceRequests from "../pages/TeamRegularizeRequest";
+import PerformanceCycle from "../pages/PerformaceCycle";
 
 export default function AppRoutes() {
   return (
@@ -39,6 +40,7 @@ export default function AppRoutes() {
         <Route path="/team-attendance" element={<TeamAttendance />} />
         <Route path="/regularize-attendance" element={<RegularizeAttendance />} />
           <Route path="/team-regularize-attendance-requests" element={<TeamRegularizeAttendanceRequests />} />
+            <Route path="/performance-cycles" element={<PerformanceCycle />} />
 
       </Route>
     </Routes>

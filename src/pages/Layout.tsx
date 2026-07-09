@@ -65,7 +65,7 @@ const NAV_ITEMS: NavItem[] = [
     {
         id: "PerformanceManagement", label: "Performance", icon: <TrendingUp size={18} />,
         subItems: [
-            { id: "Performance Cycle", label: "Performance Cycle", path: "/performance-cycle" },
+            { id: "Performance Cycle", label: "Performance Cycle", path: "/performance-cycles" },
 
         ],
     },
