@@ -1,36 +1,66 @@
-import { PerformanceCycleStatus, type PerformanceCycleFormData } from "../../models/PerformaceCycle";
+import { PerformanceCycleStatus, type PerformanceCycle, type PerformanceCycleFormData } from "../../models/PerformaceCycle";
 import { CalendarDays } from "lucide-react";
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useForm } from "react-hook-form";
+import Loader from "../common/Loader";
+
+const emptyFormValues: PerformanceCycleFormData = {
+    cycleName: "",
+    reviewPeriodStart: "",
+    reviewPeriodEnd: "",
+    employeeReviewStart: "",
+    employeeReviewEnd: "",
+    managerReviewStart: "",
+    managerReviewEnd: "",
+    status: PerformanceCycleStatus.Draft
+};
+
 interface AddPerformanceCycleProps {
     isOpen: boolean;
     onClose: () => void;
+    onSubmit: (data: PerformanceCycleFormData) => Promise<void>;
+    loading?: boolean;
+    editingCycle?: PerformanceCycle | null;
 }
 const AddPerformanceCycleModal: React.FC<AddPerformanceCycleProps> = ({
     isOpen,
-    onClose
+    onClose,
+    onSubmit: onSubmitCycle,
+    loading = false,
+    editingCycle = null
 
 }) => {
+    const isEditMode = !!editingCycle;
+
     const {
         register,
         handleSubmit,
         watch,
         setValue,
         reset,
-        trigger,
         formState: { errors }
     } = useForm<PerformanceCycleFormData>({
-        defaultValues: {
-            cycleName: "",
-            reviewPeriodStart: "",
-            reviewPeriodEnd: "",
-            employeeReviewStart: "",
-            employeeReviewEnd: "",
-            managerReviewStart: "",
-            managerReviewEnd: "",
-            status: PerformanceCycleStatus.Draft
-        }
+        defaultValues: emptyFormValues
     });
+
+    useEffect(() => {
+        if (!isOpen) return;
+
+        if (editingCycle) {
+            reset({
+                cycleName: editingCycle.cycleName,
+                reviewPeriodStart: editingCycle.reviewPeriodStart,
+                reviewPeriodEnd: editingCycle.reviewPeriodEnd,
+                employeeReviewStart: editingCycle.employeeReviewStart,
+                employeeReviewEnd: editingCycle.employeeReviewEnd,
+                managerReviewStart: editingCycle.managerReviewStart,
+                managerReviewEnd: editingCycle.managerReviewEnd,
+                status: editingCycle.status
+            });
+        } else {
+            reset(emptyFormValues);
+        }
+    }, [isOpen, editingCycle, reset]);
     const reviewPeriodStart = watch("reviewPeriodStart");
     const reviewPeriodEnd = watch("reviewPeriodEnd");
     const employeeReviewStart = watch("employeeReviewStart");
@@ -102,10 +132,8 @@ const AddPerformanceCycleModal: React.FC<AddPerformanceCycleProps> = ({
     ];
     if (!isOpen) return null;
 
-    const onSubmit = (data: PerformanceCycleFormData) => {
-
-        console.log(data);
-
+    const onSubmit = async (data: PerformanceCycleFormData) => {
+        await onSubmitCycle(data);
     };
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
@@ -114,7 +142,7 @@ const AddPerformanceCycleModal: React.FC<AddPerformanceCycleProps> = ({
 
                 {/* Header (Sticky at top) */}
                 <div className="flex items-center justify-between p-6 pb-4 border-b border-gray-100 dark:border-slate-800">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">Add Performance Cycle</h2>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">{isEditMode ? "Edit Performance Cycle" : "Add Performance Cycle"}</h2>
                     <button type="button" onClick={onClose} className="text-gray-400 dark:text-slate-500 hover:text-gray-600">✕</button>
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)} className="p-6 overflow-y-auto space-y-6">
@@ -163,7 +191,8 @@ const AddPerformanceCycleModal: React.FC<AddPerformanceCycleProps> = ({
                         <select
                             id="status"
                             {...register("status", {
-                                required: "Status is required."
+                                required: "Status is required.",
+                                valueAsNumber: true
                             })}
                             className="w-full rounded-lg border border-gray-200 dark:border-slate-700
                    bg-white dark:bg-slate-950
@@ -590,24 +619,27 @@ const AddPerformanceCycleModal: React.FC<AddPerformanceCycleProps> = ({
                         <button
                             type="button"
                             onClick={onClose}
+                            disabled={loading}
                             className="px-5 py-2.5 text-sm font-medium rounded-lg border border-gray-300 dark:border-slate-600
                    bg-white dark:bg-slate-800
                    text-gray-700 dark:text-slate-300
                    hover:bg-gray-100 dark:hover:bg-slate-700
-                   transition-all duration-200"
+                   transition-all duration-200 disabled:opacity-50"
                         >
                             Cancel
                         </button>
 
                         <button
                             type="submit"
+                            disabled={loading}
                             className="px-5 py-2.5 text-sm font-medium rounded-lg
                    bg-[#6C63FF] text-white
                    hover:bg-[#5B52F5]
                    focus:outline-none focus:ring-2 focus:ring-[#6C63FF]/30
-                   transition-all duration-200"
+                   transition-all duration-200 disabled:opacity-50
+                   min-w-[110px] flex items-center justify-center"
                         >
-                            Save
+                            {loading ? <Loader size="sm" /> : isEditMode ? "Update Cycle" : "Save Cycle"}
                         </button>
 
                     </div>

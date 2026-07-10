@@ -1,13 +1,10 @@
-import { Edit2, Plus, Search, Trash2, ChevronDown, CalendarDays, ChevronUp } from "lucide-react";
-import React, { useMemo, useRef, useState } from 'react';
+import { Edit2, Plus, Search, Trash2, ChevronDown, ChevronUp } from "lucide-react";
+import React, { useEffect, useMemo, useState } from 'react';
 import AddPerformanceCycleModal from "../components/modals/AddPerformaceCycle";
-import { PerformanceCycleStatus } from "../models/PerformaceCycle";
-
-const MOCK_CYCLES = [
-    { id: 1, name: "Mid-Year Review 2026", status: PerformanceCycleStatus.Active, start: "Jan 1, 2026", end: "Jun 30, 2026" },
-    { id: 2, name: "Annual Review 2025", status: PerformanceCycleStatus.Completed, start: "Jan 1, 2025", end: "Dec 31, 2025" },
-    { id: 3, name: "Q3 Check-In 2026", status: PerformanceCycleStatus.Draft, start: "Jul 1, 2026", end: "Sep 30, 2026" },
-];
+import DeletePerformanceCycleModal from "../components/modals/DeletePerformanceCycleModal";
+import Loader from "../components/common/Loader";
+import performanceCycleService from "../services/performanceCycleService";
+import { PerformanceCycleStatus, type PerformanceCycle as PerformanceCycleModel, type PerformanceCycleFormData } from "../models/PerformaceCycle";
 
 const statusLabels: Record<number, string> = {
     [PerformanceCycleStatus.Draft]: "Draft",
@@ -54,7 +51,17 @@ const getStatusBadge = (status: PerformanceCycleStatus) => {
 };
 
 const PerformanceCycle: React.FC = () => {
+    const [cycles, setCycles] = useState<PerformanceCycleModel[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [editingCycle, setEditingCycle] = useState<PerformanceCycleModel | null>(null);
+
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+    const [cycleToDelete, setCycleToDelete] = useState<PerformanceCycleModel | null>(null);
+
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
     const currentYear = new Date().getFullYear();
@@ -62,9 +69,23 @@ const PerformanceCycle: React.FC = () => {
     const [selectedYear, setSelectedYear] = useState("All");
 
     const yearOptions = Array.from({ length: 6 }, (_, index) => currentYear - index);
-    const [expandedCard, setExpandedCard] = useState<number | null>(null);
+    const [expandedCard, setExpandedCard] = useState<string | null>(null);
 
+    useEffect(() => {
+        loadCycles();
+    }, []);
 
+    const loadCycles = async () => {
+        try {
+            setLoading(true);
+            const response = await performanceCycleService.getPerformanceCycles();
+            setCycles(response.data || []);
+        } catch (error) {
+            console.error("Error loading performance cycles:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const formatDate = (value: string) => {
         if (!value) return "Start Date";
@@ -76,9 +97,65 @@ const PerformanceCycle: React.FC = () => {
         });
     };
 
+    const openAddModal = () => {
+        setEditingCycle(null);
+        setIsModalOpen(true);
+    };
+
+    const openEditModal = (cycle: PerformanceCycleModel) => {
+        setEditingCycle(cycle);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setEditingCycle(null);
+    };
+
+    const handleSubmitCycle = async (data: PerformanceCycleFormData) => {
+        try {
+            setSaving(true);
+
+            if (editingCycle) {
+                await performanceCycleService.updatePerformanceCycle(editingCycle.id, data);
+            } else {
+                await performanceCycleService.addPerformanceCycle(data);
+            }
+
+            closeModal();
+            await loadCycles();
+        } catch (error) {
+            console.error("Error saving performance cycle:", error);
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleDeleteClick = (cycle: PerformanceCycleModel) => {
+        setCycleToDelete(cycle);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!cycleToDelete) return;
+
+        try {
+            setDeleting(true);
+            await performanceCycleService.deletePerformanceCycle(cycleToDelete.id);
+
+            setIsDeleteModalOpen(false);
+            setCycleToDelete(null);
+            await loadCycles();
+        } catch (error) {
+            console.error("Error deleting performance cycle:", error);
+        } finally {
+            setDeleting(false);
+        }
+    };
+
     const filteredCycles = useMemo(() => {
-        return MOCK_CYCLES.filter((cycle) => {
-            const matchesSearch = cycle.name
+        return cycles.filter((cycle) => {
+            const matchesSearch = cycle.cycleName
                 .toLowerCase()
                 .includes(search.toLowerCase());
 
@@ -86,7 +163,7 @@ const PerformanceCycle: React.FC = () => {
                 statusFilter === "All" ||
                 cycle.status === Number(statusFilter);
 
-            const cycleYear = new Date(cycle.start).getFullYear();
+            const cycleYear = new Date(cycle.reviewPeriodStart).getFullYear();
 
             const matchesYear =
                 selectedYear === "All" ||
@@ -98,7 +175,7 @@ const PerformanceCycle: React.FC = () => {
                 matchesYear
             );
         });
-    }, [search, statusFilter, selectedYear]);
+    }, [cycles, search, statusFilter, selectedYear]);
 
     return (
         <div className="space-y-6 max-w-[1600px] mx-auto p-6">
@@ -108,7 +185,7 @@ const PerformanceCycle: React.FC = () => {
                     <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Performance Cycles</h1>
                     <p className="text-slate-500 dark:text-slate-400 mt-1">Manage review cycles, phase windows, and status for your organisation</p>
                 </div>
-                <button className="flex items-center gap-2 bg-[#6C63FF] hover:bg-[#5B52F5] text-white px-5 py-2.5 rounded-xl font-medium shadow-sm" onClick={() => setIsModalOpen(true)}>
+                <button className="flex items-center gap-2 bg-[#6C63FF] hover:bg-[#5B52F5] text-white px-5 py-2.5 rounded-xl font-medium shadow-sm" onClick={openAddModal}>
                     <Plus size={18} /> Add Cycle
                 </button>
             </div>
@@ -189,117 +266,161 @@ const PerformanceCycle: React.FC = () => {
             </div>
 
             {/* CARDS GRID */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredCycles.map((cycle) => (
-          <div
-    key={cycle.id}
-    className={`bg-white dark:bg-slate-800
-        p-6
-        rounded-2xl
-        border
-        border-slate-200
-        dark:border-slate-700
-        ${getStatusTopBorder(cycle.status)}
-        shadow-sm
-        hover:shadow-lg
-        hover:-translate-y-1
-        transition-all
-        duration-300`}
->
-                        <div className="flex justify-between items-start mb-2">
-                            <h3 className="font-bold text-xl dark:text-white">{cycle.name}</h3>
-                            <span
-                                className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 ${getStatusBadge(
-                                    cycle.status
-                                )}`}
-                            >
-                                <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
-                                {statusLabels[cycle.status]}
-                            </span>
-                        </div>
-                        <p className="text-sm text-slate-500 mb-5">{cycle.start} — {cycle.end}</p>
+            <div className="relative min-h-[200px]">
+                {loading && (
+                    <div className="absolute inset-0 z-40 bg-white/60 dark:bg-slate-900/60 backdrop-blur-[1px] rounded-2xl">
+                        <Loader />
+                    </div>
+                )}
 
-                        {/* Progress Bar Mock */}
-                        <div className="h-2 w-full bg-slate-100 dark:bg-slate-700 rounded-full mb-4 flex overflow-hidden">
-                            <div className="w-2/3 bg-indigo-500"></div>
-                            <div className="w-1/3 bg-cyan-400"></div>
+                {!loading && filteredCycles.length === 0 && (
+                    <div className="p-16 text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl">
+                        <div className="inline-flex p-3 bg-slate-50 dark:bg-slate-950 text-slate-400 dark:text-slate-500 rounded-full mb-3">
+                            <Search size={24} />
                         </div>
+                        <h3 className="text-sm font-medium text-slate-900 dark:text-slate-100">No performance cycles found</h3>
+                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 max-w-xs mx-auto">
+                            Try adjusting your search terms or filters, or add a new cycle.
+                        </p>
+                    </div>
+                )}
 
-                        <div className="flex gap-4 mb-4 text-xs font-medium text-slate-600">
-                            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-indigo-500"></span> Employee phase</span>
-                            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-cyan-400"></span> Manager phase</span>
-                        </div>
-
-                        <button
-                            type="button"
-                            onClick={() =>
-                                setExpandedCard(
-                                    expandedCard === cycle.id ? null : cycle.id
-                                )
-                            }
-                            className="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-2 mb-4 transition-colors"
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {filteredCycles.map((cycle) => (
+                        <div
+                            key={cycle.id}
+                            className={`bg-white dark:bg-slate-800
+                p-6
+                rounded-2xl
+                border
+                border-slate-200
+                dark:border-slate-700
+                ${getStatusTopBorder(cycle.status)}
+                shadow-sm
+                hover:shadow-lg
+                hover:-translate-y-1
+                transition-all
+                duration-300`}
                         >
-                            {expandedCard === cycle.id ? (
-                                <>
-                                    <ChevronUp size={16} />
-                                    Hide phase details
-                                </>
-                            ) : (
-                                <>
-                                    <ChevronDown size={16} />
-                                    Show phase dates
-                                </>
-                            )}
-                        </button>
-                        {expandedCard === cycle.id && (
+                            <div className="flex justify-between items-start mb-2">
+                                <h3 className="font-bold text-xl dark:text-white">{cycle.cycleName}</h3>
+                                <span
+                                    className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 ${getStatusBadge(
+                                        cycle.status
+                                    )}`}
+                                >
+                                    <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
+                                    {statusLabels[cycle.status]}
+                                </span>
+                            </div>
+                            <p className="text-sm text-slate-500 mb-5">{formatDate(cycle.reviewPeriodStart)} — {formatDate(cycle.reviewPeriodEnd)}</p>
 
-                            <div className="mb-6 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 p-4 animate-fade-in">
+                            {/* Progress Bar Mock */}
+                            <div className="h-2 w-full bg-slate-100 dark:bg-slate-700 rounded-full mb-4 flex overflow-hidden">
+                                <div className="w-2/3 bg-indigo-500"></div>
+                                <div className="w-1/3 bg-cyan-400"></div>
+                            </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="flex gap-4 mb-4 text-xs font-medium text-slate-600">
+                                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-indigo-500"></span> Employee phase</span>
+                                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-cyan-400"></span> Manager phase</span>
+                            </div>
 
-                                    {/* Employee Review */}
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setExpandedCard(
+                                        expandedCard === cycle.id ? null : cycle.id
+                                    )
+                                }
+                                className="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-2 mb-4 transition-colors"
+                            >
+                                {expandedCard === cycle.id ? (
+                                    <>
+                                        <ChevronUp size={16} />
+                                        Hide phase details
+                                    </>
+                                ) : (
+                                    <>
+                                        <ChevronDown size={16} />
+                                        Show phase dates
+                                    </>
+                                )}
+                            </button>
+                            {expandedCard === cycle.id && (
 
-                                    <div>
+                                <div className="mb-6 border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 p-4 animate-fade-in">
 
-                                        <h4 className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mb-2">
-                                            Employee Review
-                                        </h4>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                                        <p className="text-sm text-slate-500 dark:text-slate-400">
-                                            {cycle.start} → {cycle.end}
-                                        </p>
+                                        {/* Employee Review */}
 
-                                    </div>
+                                        <div>
 
-                                    {/* Manager Review */}
+                                            <h4 className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mb-2">
+                                                Employee Review
+                                            </h4>
 
-                                    <div>
+                                            <p className="text-sm text-slate-500 dark:text-slate-400">
+                                                {formatDate(cycle.employeeReviewStart)} → {formatDate(cycle.employeeReviewEnd)}
+                                            </p>
 
-                                        <h4 className="text-sm font-semibold text-cyan-600 dark:text-cyan-400 mb-2">
-                                            Manager Review
-                                        </h4>
+                                        </div>
 
-                                        <p className="text-sm text-slate-500 dark:text-slate-400">
-                                            {cycle.start} → {cycle.end}
-                                        </p>
+                                        {/* Manager Review */}
+
+                                        <div>
+
+                                            <h4 className="text-sm font-semibold text-cyan-600 dark:text-cyan-400 mb-2">
+                                                Manager Review
+                                            </h4>
+
+                                            <p className="text-sm text-slate-500 dark:text-slate-400">
+                                                {formatDate(cycle.managerReviewStart)} → {formatDate(cycle.managerReviewEnd)}
+                                            </p>
+
+                                        </div>
 
                                     </div>
 
                                 </div>
 
+                            )}
+
+                            <div className="flex gap-3 border-t pt-4">
+                                <button
+                                    onClick={() => openEditModal(cycle)}
+                                    className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700"
+                                >
+                                    <Edit2 size={16} /> Edit
+                                </button>
+                                <button
+                                    onClick={() => handleDeleteClick(cycle)}
+                                    className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm font-medium text-red-600 hover:bg-red-50"
+                                >
+                                    <Trash2 size={16} /> Delete
+                                </button>
                             </div>
-
-                        )}
-
-                        <div className="flex gap-3 border-t pt-4">
-                            <button className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700"><Edit2 size={16} /> Edit</button>
-                            <button className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm font-medium text-red-600 hover:bg-red-50"><Trash2 size={16} /> Delete</button>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
 
-            <AddPerformanceCycleModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            <AddPerformanceCycleModal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                onSubmit={handleSubmitCycle}
+                loading={saving}
+                editingCycle={editingCycle}
+            />
+
+            <DeletePerformanceCycleModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={handleConfirmDelete}
+                cycleName={cycleToDelete?.cycleName ?? ""}
+                loading={deleting}
+            />
         </div>
     );
 };
