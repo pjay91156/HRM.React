@@ -1,5 +1,6 @@
-import { Edit2, Plus, Search, Trash2, Building2, FileStack } from "lucide-react";
+import { Edit2, Plus, Search, Trash2, Building2, FileStack, LayoutGrid } from "lucide-react";
 import React, { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import AddPerformanceTemplateModal from "../components/modals/AddPerformanceTemplateModal";
 import DeletePerformanceTemplateModal from "../components/modals/DeletePerformanceTemplateModal";
 import Loader from "../components/common/Loader";
@@ -9,6 +10,7 @@ import { type PerformanceTemplate, type PerformanceTemplateFormData } from "../m
 import { type Department } from "../models/Department";
 
 const PerformanceTemplatePage: React.FC = () => {
+    const navigate = useNavigate();
     const [templates, setTemplates] = useState<PerformanceTemplate[]>([]);
     const [departments, setDepartments] = useState<Department[]>([]);
     const [loading, setLoading] = useState(false);
@@ -223,6 +225,13 @@ const PerformanceTemplatePage: React.FC = () => {
                             <p className="text-sm text-slate-500 dark:text-slate-400 flex-1 mb-5 line-clamp-3">
                                 {template.description || "No description provided."}
                             </p>
+
+                            <button
+                                onClick={() => navigate(`/performance-templates/${template.id}/categories`)}
+                                className="w-full flex items-center justify-center gap-2 py-2 mb-3 rounded-lg border border-[#6C63FF]/30 text-sm font-medium text-[#6C63FF] hover:bg-[#6C63FF]/10 dark:text-indigo-400 dark:border-indigo-400/30 dark:hover:bg-indigo-500/10"
+                            >
+                                <LayoutGrid size={16} /> Manage Categories
+                            </button>
 
                             <div className="flex gap-3 border-t border-slate-100 dark:border-slate-700 pt-4">
                                 <button

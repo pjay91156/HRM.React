@@ -19,6 +19,8 @@ import TeamRegularizeAttendanceRequests from "../pages/TeamRegularizeRequest";
 import PerformanceCycle from "../pages/PerformaceCycle";
 import PerformanceRating from "../pages/PerformanceRating";
 import PerformanceTemplate from "../pages/PerformanceTemplate";
+import PerformanceCategory from "../pages/PerformanceCategory";
+import PerformanceSkill from "../pages/PerformanceSkill";
 
 export default function AppRoutes() {
   return (
@@ -45,6 +47,8 @@ export default function AppRoutes() {
             <Route path="/performance-cycles" element={<PerformanceCycle />} />
             <Route path="/performance-ratings" element={<PerformanceRating />} />
             <Route path="/performance-templates" element={<PerformanceTemplate />} />
+            <Route path="/performance-templates/:templateId/categories" element={<PerformanceCategory />} />
+            <Route path="/performance-templates/:templateId/categories/:categoryId/skills" element={<PerformanceSkill />} />
 
       </Route>
     </Routes>

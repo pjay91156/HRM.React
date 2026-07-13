@@ -370,7 +370,7 @@ const Layout: React.FC = () => {
                 <aside className={`${isCollapsed ? "w-[76px]" : "w-[240px]"} shrink-0 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col transition-all duration-200`}>
 
                     {/* Menu */}
-                    <nav className="flex-1 overflow-y-auto p-4 space-y-1">
+                    <nav className="min-h-0 overflow-y-auto p-4 space-y-1">
                         {NAV_ITEMS.map((item) => {
                             if (!item.subItems) {
                                 const isActive = current?.id === item.id;
