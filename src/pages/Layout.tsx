@@ -68,6 +68,7 @@ const NAV_ITEMS: NavItem[] = [
             { id: "Performance Cycle", label: "Performance Cycle", path: "/performance-cycles" },
             { id: "Performance Rating", label: "Performance Rating", path: "/performance-ratings" },
             { id: "Performance Template", label: "Performance Template", path: "/performance-templates" },
+              { id: "Review", label: " Review", path: "/review" },
 
         ],
     },
@@ -106,7 +107,7 @@ const Layout: React.FC = () => {
     const [isLeaveOpen, setIsLeaveOpen] = useState(false);
     const [isAttendanceOpen, setIsAttendanceOpen] = useState(false);
     const [isPerformanceOpen, setIsPerformanceOpen] = useState(false);
-    const [isCollapsed, setIsCollapsed] = useState(false);
+const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isNotifOpen, setIsNotifOpen] = useState(false);
     const [notifications, setNotifications] = useState<NotificationItem[]>([]);
@@ -148,6 +149,19 @@ const Layout: React.FC = () => {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
+    useEffect(() => {
+    const handleResize = () => {
+        if (window.innerWidth < 1024) {
+            setIsCollapsed(true);
+        } else {
+            setIsCollapsed(false);
+        }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+}, []);
 
     const handleNotificationClick = async (notification: NotificationItem) => {
         setIsNotifOpen(false);
