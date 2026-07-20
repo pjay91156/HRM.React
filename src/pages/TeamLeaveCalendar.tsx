@@ -7,6 +7,8 @@ interface TeamLeaveCalendarResponse {
   leaveType: string;
   fromDate: string;
   toDate: string;
+  leaveDuration: number; // 1 = Full day, 2 = Half day
+  halfDayPeriod: number | null; // 1 = First Half, 2 = second Half
 }
 
 const TeamLeaveCalendar: React.FC = () => {
@@ -111,11 +113,23 @@ const TeamLeaveCalendar: React.FC = () => {
                     <div className="space-y-0.5 overflow-y-auto max-h-[50px] [&::-webkit-scrollbar]:hidden">
                       {leaves
                         .filter(l => (leaveTypeFilter === "All" || l.leaveType === leaveTypeFilter) && date >= new Date(l.fromDate) && date <= new Date(l.toDate))
-                        .map(l => (
-                          <div key={l.leaveRequestId} className={`px-1.5 py-0.5 text-[9px] font-medium rounded border truncate ${getLeaveTheme(l.leaveType)}`}>
-                            {l.employeeName}
-                          </div>
-                      ))}
+                        .map(l => {
+                          const isHalfDay = l.leaveDuration === 2;
+                          return (
+                            <div
+                              key={l.leaveRequestId}
+                              title={isHalfDay ? (l.halfDayPeriod === 1 ? "First Half" : "second Half") : "Full day"}
+                              className={`px-1.5 py-0.5 text-[9px] font-medium rounded truncate flex items-center gap-1 ${getLeaveTheme(l.leaveType)} ${isHalfDay ? "border border-dashed opacity-80" : "border"}`}
+                            >
+                              {isHalfDay && (
+                                <span className="font-bold">
+                                  {l.halfDayPeriod === 1 ? "½AM" : "½PM"}
+                                </span>
+                              )}
+                              <span className="truncate">{l.employeeName}</span>
+                            </div>
+                          );
+                        })}
                     </div>
                   </>
                 )}

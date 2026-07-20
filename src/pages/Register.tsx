@@ -62,10 +62,6 @@ const handleSubmit = async (
     const response = await register(form);
 
     if (response.success) {
-      alert(response.message);
-
-      console.log(response.data);
-
       setForm({
         firstName: "",
         lastName: "",
@@ -74,17 +70,9 @@ const handleSubmit = async (
         password: "",
         confirmPassword: ""
       });
-    } else {
-      alert(response.message);
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
-
-    if (error.response?.data?.message) {
-      alert(error.response.data.message);
-    } else {
-      alert("Something went wrong.");
-    }
   } finally {
     setLoading(false);
   }

@@ -32,7 +32,6 @@ const DesignationsTable: React.FC = () => {
             await loadDesignations();
         } catch (error) {
             console.error(error);
-            alert("Failed to add designation.");
         } finally {
             setAddDesignationLoading(false);
         }
@@ -82,7 +81,6 @@ const DesignationsTable: React.FC = () => {
             loadDesignations();
         } catch (error) {
             console.error(error);
-            alert("Failed to delete designation.");
         } finally {
             setLoading(false);
             setSelectedDesignation(null);
@@ -151,13 +149,13 @@ const DesignationsTable: React.FC = () => {
                     </div>
                 )}
 
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto max-h-[65vh] overflow-y-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="relative z-30 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                                <th className="py-3.5 px-6 font-semibold">Designation Title</th>
-                                <th className="py-3.5 px-6 font-semibold">Department</th>
-                                <th className="py-3.5 px-6 font-semibold text-right">Actions</th>
+                            <tr className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                <th className="sticky top-0 z-30 py-3.5 px-6 font-semibold bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-700">Designation Title</th>
+                                <th className="sticky top-0 z-30 py-3.5 px-6 font-semibold bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-700">Department</th>
+                                <th className="sticky top-0 z-30 py-3.5 px-6 font-semibold text-right bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-700">Actions</th>
                             </tr>
                         </thead>
 

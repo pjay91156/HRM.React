@@ -611,6 +611,8 @@ const MyAttendance: React.FC = () => {
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
                         {weeklySummary?.days.map((day) => {
                             const date = new Date(day.date);
+                            const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+                            const isWeeklyOff = isWeekend && !day.isPresent;
                             return (
                                 <div
                                     key={day.date}
@@ -632,9 +634,9 @@ const MyAttendance: React.FC = () => {
                                     </div>
 
                                     <div className="flex items-center gap-2">
-                                        <span className={`w-2 h-2 rounded-full ${day.isPresent ? 'bg-emerald-500' : 'bg-rose-400'}`} />
-                                        <span className={`text-xs font-semibold ${day.isPresent ? 'text-emerald-700' : 'text-rose-600'}`}>
-                                            {day.isPresent ? "Present" : "Absent"}
+                                        <span className={`w-2 h-2 rounded-full ${day.isPresent ? 'bg-emerald-500' : isWeeklyOff ? 'bg-gray-400' : 'bg-rose-400'}`} />
+                                        <span className={`text-xs font-semibold ${day.isPresent ? 'text-emerald-700' : isWeeklyOff ? 'text-gray-500' : 'text-rose-600'}`}>
+                                            {day.isPresent ? "Present" : isWeeklyOff ? "Weekly Off" : "Absent"}
                                         </span>
                                     </div>
                                 </div>

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { CalendarDays } from "lucide-react";
 import leaveTypeService from "../services/leaveTypeService";
 import { type LeaveRequestFormData } from "../models/LeaveRequest";
@@ -10,10 +11,30 @@ interface LeaveType {
     leaveName: string;
 }
 
+interface LeaveBalance {
+    leaveTypeId: string;
+    leaveName: string;
+    defaultDays: number;
+    usedDays: number;
+    remainingDays: number;
+}
 
+const leaveIcons = ["📅", "💊", "⭐", "🌴", "🩺", "🏖️"];
+const leaveThemes = [
+    { bg: "bg-violet-50", iconBg: "bg-violet-100", iconText: "text-violet-600" },
+    { bg: "bg-blue-50", iconBg: "bg-blue-100", iconText: "text-blue-600" },
+    { bg: "bg-emerald-50", iconBg: "bg-emerald-100", iconText: "text-emerald-600" },
+];
+
+// Single "Leave Duration" dropdown maps directly to backend LeaveDuration + HalfDayPeriod
+const DURATION_FULL_DAY = 1;
+const DURATION_FIRST_HALF = 2;
+const DURATION_SECOND_HALF = 3;
 
 const LeaveRequest: React.FC = () => {
+    const navigate = useNavigate();
     const [leaveTypes, setLeaveTypes] = useState<LeaveType[]>([]);
+    const [leaveBalances, setLeaveBalances] = useState<LeaveBalance[]>([]);
     const [totalDays, setTotalDays] = useState<number>(0);
 
     const {
@@ -72,9 +93,9 @@ const LeaveRequest: React.FC = () => {
             const start = new Date(fromDate);
             const end = new Date(value);
 
-            if (leaveDuration === 2 || leaveDuration === 3) {
+            if (leaveDuration === DURATION_FIRST_HALF || leaveDuration === DURATION_SECOND_HALF) {
                 if (start.getTime() !== end.getTime()) {
-                    return "Select proper date: For Half Day / Short Leave, From Date and To Date must be same";
+                    return "Select proper date: For First Half / second Half, From Date and To Date must be same";
                 }
             }
 
@@ -88,6 +109,7 @@ const LeaveRequest: React.FC = () => {
 
     useEffect(() => {
         loadLeaveTypes();
+        loadLeaveBalance();
     }, []);
 
     const loadLeaveTypes = async () => {
@@ -101,13 +123,24 @@ const LeaveRequest: React.FC = () => {
         }
     };
 
+    const loadLeaveBalance = async () => {
+        try {
+            const response = await leaveRequestService.getLeaveBalance();
+            if (response.success) {
+                setLeaveBalances(response.data ?? []);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     useEffect(() => {
         if (!fromDate) {
             setTotalDays(0);
             return;
         }
 
-        if (leaveDuration === 2) {
+        if (leaveDuration === DURATION_FIRST_HALF || leaveDuration === DURATION_SECOND_HALF) {
             setTotalDays(0.5);
             return;
         }
@@ -128,16 +161,21 @@ const LeaveRequest: React.FC = () => {
 
     const onSubmit = async (data: LeaveRequestFormData) => {
         try {
-            const response =
-                await leaveRequestService.applyLeave(data);
+            // Map the single "Leave Duration" dropdown selection to the backend's
+            // LeaveDuration + HalfDayPeriod fields.
+            const payload: LeaveRequestFormData =
+                data.leaveDuration === DURATION_FIRST_HALF
+                    ? { ...data, leaveDuration: 2, halfDayPeriod: 1 }
+                    : data.leaveDuration === DURATION_SECOND_HALF
+                        ? { ...data, leaveDuration: 2, halfDayPeriod: 2 }
+                        : { ...data, leaveDuration: 1, halfDayPeriod: null };
 
-            console.log(response);
+            await leaveRequestService.applyLeave(payload);
 
-            alert("Leave applied successfully");
+            navigate("/my-leaves");
         }
         catch (error) {
             console.error(error);
-            alert("Failed to apply leave");
         }
     };
 
@@ -210,9 +248,9 @@ const LeaveRequest: React.FC = () => {
                                         }`}
                                 >
                                     <option value="">Select Leave Duration</option>
-                                    <option value={1}>Full Day</option>
-                                    <option value={2}>Half Day</option>
-                                    <option value={3}>Short Leave</option>
+                                    <option value={DURATION_FULL_DAY}>Full day</option>
+                                    <option value={DURATION_FIRST_HALF}>First Half</option>
+                                    <option value={DURATION_SECOND_HALF}>second Half</option>
                                 </select>
 
                                 {errors.leaveDuration && (
@@ -365,39 +403,27 @@ const LeaveRequest: React.FC = () => {
                     </h2>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
-                        {/* Casual Leave */}
-                        <div className="p-4 rounded-xl bg-violet-50 border border-violet-100">
-                            <div className="flex items-center gap-3 mb-2">
-                                <div className="p-2 bg-violet-100 rounded-lg text-violet-600">
-                                    {/* You can use Lucide-React icons here */}
-                                    <span>📅</span>
-                                </div>
-                                <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Casual Leave</span>
-                            </div>
-                            <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">8.5 <span className="text-sm font-normal text-slate-500 dark:text-slate-400">of 12 days</span></p>
-                        </div>
-
-                        {/* Sick Leave */}
-                        <div className="p-4 rounded-xl bg-blue-50 border border-blue-100">
-                            <div className="flex items-center gap-3 mb-2">
-                                <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
-                                    <span>💊</span>
-                                </div>
-                                <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Sick Leave</span>
-                            </div>
-                            <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">6 <span className="text-sm font-normal text-slate-500 dark:text-slate-400">of 10 days</span></p>
-                        </div>
-
-                        {/* Earned Leave */}
-                        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-100">
-                            <div className="flex items-center gap-3 mb-2">
-                                <div className="p-2 bg-emerald-100 rounded-lg text-emerald-600">
-                                    <span>⭐</span>
-                                </div>
-                                <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Earned Leave</span>
-                            </div>
-                            <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">12 <span className="text-sm font-normal text-slate-500 dark:text-slate-400">of 18 days</span></p>
-                        </div>
+                        {leaveBalances.length === 0 ? (
+                            <p className="text-sm text-slate-400 dark:text-slate-500">No leave balance data found</p>
+                        ) : (
+                            leaveBalances.map((balance, index) => {
+                                const theme = leaveThemes[index % leaveThemes.length];
+                                const icon = leaveIcons[index % leaveIcons.length];
+                                return (
+                                    <div key={balance.leaveTypeId} className={`p-4 rounded-xl ${theme.bg} border border-slate-100`}>
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <div className={`p-2 ${theme.iconBg} rounded-lg ${theme.iconText}`}>
+                                                <span>{icon}</span>
+                                            </div>
+                                            <span className="text-sm font-medium text-slate-600 dark:text-slate-400">{balance.leaveName}</span>
+                                        </div>
+                                        <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                                            {balance.remainingDays} <span className="text-sm font-normal text-slate-500 dark:text-slate-400">of {balance.defaultDays} days</span>
+                                        </p>
+                                    </div>
+                                );
+                            })
+                        )}
                     </div>
                 </div>
 

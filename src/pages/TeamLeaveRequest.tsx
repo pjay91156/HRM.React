@@ -1,14 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import leaveRequestService from "../services/leaveRequestService";
 import { Check, X, Search } from "lucide-react";
 import { type TeamLeaveRequest } from "../models/LeaveRequest";
 import Loader from "../components/common/Loader";
 import LeaveApprovalModal from "../components/modals/LeaveApprovalModal";
 
+const statusConfig: Record<string, { color: string; bg: string }> = {
+    Pending: { color: "text-amber-600", bg: "bg-amber-50" },
+    Approved: { color: "text-emerald-600", bg: "bg-emerald-50" },
+    Rejected: { color: "text-red-600", bg: "bg-red-50" },
+    Cancelled: { color: "text-slate-600 dark:text-slate-400", bg: "bg-slate-50 dark:bg-slate-950" },
+};
+
 const TeamLeaveRequests: React.FC = () => {
     const [requests, setRequests] = useState<TeamLeaveRequest[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [modalOpen, setModalOpen] = useState(false);
+    const [selectedStatus, setSelectedStatus] = useState<string>("Pending");
+    const [searchTerm, setSearchTerm] = useState("");
 
     const [actionType, setActionType] =
         useState<"approve" | "reject">("approve");
@@ -62,6 +71,15 @@ const TeamLeaveRequests: React.FC = () => {
         setComments("");
         setModalOpen(true);
     };
+    const filteredRequests = useMemo(() => {
+        return requests
+            .filter((req) => selectedStatus === "All" || req.status === selectedStatus)
+            .filter((req) =>
+                searchTerm.trim() === "" ||
+                req.employeeName.toLowerCase().includes(searchTerm.trim().toLowerCase())
+            );
+    }, [requests, selectedStatus, searchTerm]);
+
     const handleConfirmAction = async () => {
 
         if (!selectedRequest) return;
@@ -127,13 +145,22 @@ const TeamLeaveRequests: React.FC = () => {
                         <input
                             type="text"
                             placeholder="Search requests..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                             className="pl-10 pr-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
                     </div>
 
-                    <select className="border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm text-slate-600 dark:text-slate-400">
-                        <option>Pending</option>
-                        <option>All</option>
+                    <select
+                        value={selectedStatus}
+                        onChange={(e) => setSelectedStatus(e.target.value)}
+                        className="border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-sm text-slate-600 dark:text-slate-400"
+                    >
+                        <option value="Pending">Pending</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Rejected">Rejected</option>
+                        <option value="Cancelled">Cancelled</option>
+                        <option value="All">All</option>
                     </select>
                 </div>
 
@@ -167,23 +194,26 @@ const TeamLeaveRequests: React.FC = () => {
                                     Applied On
                                 </th>
                                 <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
+                                    Status
+                                </th>
+                                <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
                                     Action
                                 </th>
                             </tr>
                         </thead>
 
                         <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                            {requests.length === 0 ? (
+                            {filteredRequests.length === 0 ? (
                                 <tr>
                                     <td
-                                        colSpan={8}
+                                        colSpan={9}
                                         className="p-8 text-center text-slate-500 dark:text-slate-400"
                                     >
                                         No leave requests found.
                                     </td>
                                 </tr>
                             ) : (
-                                requests.map((req) => (
+                                filteredRequests.map((req) => (
                                     <tr
                                         key={req.leaveRequestId}
                                         className="hover:bg-slate-50 dark:hover:bg-slate-800"
@@ -214,6 +244,12 @@ const TeamLeaveRequests: React.FC = () => {
 
                                         <td className="p-4 text-sm text-slate-600 dark:text-slate-400">
                                             {new Date(req.appliedOn).toLocaleDateString()}
+                                        </td>
+
+                                        <td className="p-4">
+                                            <span className={`px-2 py-1 rounded text-xs font-bold ${statusConfig[req.status]?.bg ?? "bg-slate-50 dark:bg-slate-950"} ${statusConfig[req.status]?.color ?? "text-slate-600 dark:text-slate-400"}`}>
+                                                {req.status}
+                                            </span>
                                         </td>
 
                                         <td className="p-4">

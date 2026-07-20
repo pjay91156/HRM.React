@@ -22,6 +22,8 @@ import PerformanceTemplate from "../pages/PerformanceTemplate";
 import PerformanceCategory from "../pages/PerformanceCategory";
 import PerformanceSkill from "../pages/PerformanceSkill";
 import Review from "../pages/Review";
+import MyTeamReview from "../pages/MyTeamReview";
+import Reports from "../pages/Reports";
 
 export default function AppRoutes() {
   return (
@@ -51,6 +53,8 @@ export default function AppRoutes() {
             <Route path="/performance-templates/:templateId/categories" element={<PerformanceCategory />} />
             <Route path="/performance-templates/:templateId/categories/:categoryId/skills" element={<PerformanceSkill />} />
             <Route path="/review" element={<Review />} />
+            <Route path="/my-team-review" element={<MyTeamReview />} />
+            <Route path="/reports" element={<Reports />} />
 
       </Route>
     </Routes>

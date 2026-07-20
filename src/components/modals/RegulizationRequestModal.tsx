@@ -101,6 +101,8 @@ export default function AttendanceRegularizationModal({
     const [tempSessionCounter, setTempSessionCounter] = useState(1);
     const [validationError, setValidationError] = useState("");
     const [reason, setReason] = useState("");
+    const [reasonError, setReasonError] = useState("");
+    const [noChangesError, setNoChangesError] = useState("");
 
     useEffect(() => {
 
@@ -120,18 +122,21 @@ export default function AttendanceRegularizationModal({
     }, [attendanceData]);
     const handleSubmit = async () => {
 
+        setNoChangesError("");
+
         if (validationError) {
-            alert(validationError);
             return;
         }
 
-        if (!reason.trim()) {
-            alert("Please enter reason.");
+        const isReasonMissing = !reason.trim();
+        setReasonError(isReasonMissing ? "Please enter a reason." : "");
+
+        if (isReasonMissing) {
             return;
         }
 
         if (sessionChanges.length === 0) {
-            alert("No changes found.");
+            setNoChangesError("No changes found. Update a session before submitting.");
             return;
         }
 
@@ -147,31 +152,14 @@ export default function AttendanceRegularizationModal({
 
         try {
 
-
-
             const response = await submitRegularizationRequest(request);
 
             if (response.success) {
-
-                alert(response.message);
-
                 onClose();
-
-                return;
             }
-
-            alert(response.message);
-
         }
-        catch {
-
-            alert("Unable to submit request.");
-
-        }
-        finally {
-
-
-
+        catch (error) {
+            console.error(error);
         }
     };
     const handleTimeChange = (
@@ -464,11 +452,20 @@ export default function AttendanceRegularizationModal({
                             <div>
                                 <label className="block text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">Reason for Regularization</label>
                                 <textarea value={reason}
-                                    onChange={(e) => setReason(e.target.value)}
-                                    className="w-full h-32 p-3 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm resize-none"
+                                    onChange={(e) => {
+                                        setReason(e.target.value);
+                                        if (e.target.value.trim()) setReasonError("");
+                                    }}
+                                    className={`w-full h-32 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm resize-none ${reasonError ? "border-red-500" : "border-slate-200 dark:border-slate-700"}`}
                                     placeholder="Explain why you are requesting this change..."
                                     maxLength={500}
                                 />
+                                {reasonError && (
+                                    <p className="text-red-500 text-sm mt-1">{reasonError}</p>
+                                )}
+                                {noChangesError && (
+                                    <p className="text-red-500 text-sm mt-1">{noChangesError}</p>
+                                )}
                             </div>
 
                             <div className="border border-slate-200 dark:border-slate-700 rounded-xl p-5 bg-white dark:bg-slate-900 shadow-sm">

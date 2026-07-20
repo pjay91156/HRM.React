@@ -5,14 +5,23 @@ import {
     Mail,
     Phone,
     Edit2,
-    Trash2
+    Trash2,
+    ShieldCheck,
+    ShieldMinus
 } from 'lucide-react';
 
 import employeeService from '../services/employeeService';
+import profileService from '../services/profileService';
 import { type EmployeeResponse } from "../models/Employee";
 import AddEmployeeModal from '../components/modals/AddEmployeeModal';
 import Loader from "../components/common/Loader";
 import DeleteEmployeeModal from '../components/modals/DeleteEmployeeModal';
+
+const ROLE_BADGE: Record<string, string> = {
+    Employee: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300",
+    Admin: "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700",
+    SuperAdmin: "bg-amber-50 text-amber-700"
+};
 
 const EmployeesTable: React.FC = () => {
     const [employees, setEmployees] = useState<EmployeeResponse[]>([]);
@@ -22,18 +31,19 @@ const EmployeesTable: React.FC = () => {
     const [addEmployeeLoading, setAddEmployeeLoading] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
     const [selectedEmployee, setSelectedEmployee] = useState<EmployeeResponse | null>(null);
+    const [currentEmployeeId, setCurrentEmployeeId] = useState<string | null>(null);
+    const [currentRole, setCurrentRole] = useState<"Employee" | "Admin" | "SuperAdmin" | null>(null);
+    const [roleChangingId, setRoleChangingId] = useState<string | null>(null);
 
     const handleAddEmployeeSubmit = async (newEmployeeData: any) => {
         try {
             setAddEmployeeLoading(true);
-            const response = await employeeService.addEmployee(newEmployeeData);
-            alert("Employee added successfully!");
+            await employeeService.addEmployee(newEmployeeData);
 
             setIsModalOpen(false);
             await loadEmployees();
         } catch (error) {
             console.error(error);
-            alert("Failed to add employee.");
         }
         finally {
             setAddEmployeeLoading(false);
@@ -42,7 +52,58 @@ const EmployeesTable: React.FC = () => {
 
     useEffect(() => {
         loadEmployees();
+        loadCurrentProfile();
     }, []);
+
+    const loadCurrentProfile = async () => {
+        try {
+            const response = await profileService.getMyProfile();
+            if (response.success) {
+                setCurrentEmployeeId(response.data.employeeId);
+                setCurrentRole(response.data.role);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleRoleChange = async (emp: EmployeeResponse, role: "Employee" | "Admin") => {
+        setRoleChangingId(emp.id);
+        try {
+            const response = await employeeService.updateEmployeeRole(emp.id, role);
+            if (response.success) {
+                await loadEmployees();
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setRoleChangingId(null);
+        }
+    };
+
+    // Who can act on a given row, per the role rules:
+    // - Employee actor: no role actions at all.
+    // - Admin actor: can promote Employees to Admin, and can only demote their own Admin role (self).
+    // - Super Admin actor: can promote Employees to Admin, and demote any Admin (including others) to Employee.
+    // - Super Admin rows are never changeable by anyone.
+    const getRoleAction = (emp: EmployeeResponse): { label: string; onClick: () => void } | null => {
+        if (!currentRole || currentRole === "Employee") return null;
+        if (emp.role === "SuperAdmin") return null;
+
+        const isSelf = emp.id === currentEmployeeId;
+
+        if (emp.role === "Employee") {
+            return { label: "Promote to Admin", onClick: () => handleRoleChange(emp, "Admin") };
+        }
+
+        if (emp.role === "Admin") {
+            if (isSelf || currentRole === "SuperAdmin") {
+                return { label: "Demote to Employee", onClick: () => handleRoleChange(emp, "Employee") };
+            }
+        }
+
+        return null;
+    };
 
     const loadEmployees = async () => {
         try {
@@ -77,11 +138,9 @@ const EmployeesTable: React.FC = () => {
 
             await employeeService.deleteEmployee(selectedEmployee.id);
 
-            alert("Employee removed successfully.");
             loadEmployees();
         } catch (error) {
             console.error(error);
-            alert("Failed to delete employee.");
         } finally {
             setLoading(false);
             setSelectedEmployee(null);
@@ -134,6 +193,7 @@ const EmployeesTable: React.FC = () => {
                                 <th className="py-3.5 px-4 font-semibold">Contact</th>
                                 <th className="py-3.5 px-4 font-semibold">Department</th>
                                 <th className="py-3.5 px-4 font-semibold">Designation</th>
+                                <th className="py-3.5 px-4 font-semibold">Role</th>
                                 <th className="py-3.5 px-6 font-semibold text-right">Actions</th>
                             </tr>
                         </thead>
@@ -167,8 +227,23 @@ const EmployeesTable: React.FC = () => {
                                             {emp.designationName}
                                         </span>
                                     </td>
+                                    <td className="py-4 px-4 text-sm">
+                                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${ROLE_BADGE[emp.role] ?? ROLE_BADGE.Employee}`}>
+                                            {emp.role === "SuperAdmin" ? "Super Admin" : emp.role}
+                                        </span>
+                                    </td>
                                     <td className="py-4 px-6 text-right">
                                         <div className="flex items-center justify-end gap-1.5">
+                                            {getRoleAction(emp) && (
+                                                <button
+                                                    onClick={getRoleAction(emp)!.onClick}
+                                                    disabled={roleChangingId === emp.id}
+                                                    title={getRoleAction(emp)!.label}
+                                                    className="text-slate-400 dark:text-slate-500 hover:text-indigo-600 p-1.5 rounded-lg hover:bg-indigo-50 transition-colors duration-150 disabled:opacity-50"
+                                                >
+                                                    {emp.role === "Admin" ? <ShieldMinus size={15} /> : <ShieldCheck size={15} />}
+                                                </button>
+                                            )}
                                             <button className="text-slate-400 dark:text-slate-500 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors duration-150">
                                                 <Edit2 size={15} />
                                             </button>

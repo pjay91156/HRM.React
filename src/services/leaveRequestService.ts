@@ -8,7 +8,11 @@ const applyLeave = async (data: LeaveRequestFormData) => {
 
 // Add this new function to fetch the list
 const getMyLeaves = async () => {
-    const response = await api.get("/LeaveRequest"); 
+    const response = await api.get("/LeaveRequest/myLeaves");
+    return response.data;
+};
+const getLeaveBalance = async () => {
+    const response = await api.get("/LeaveRequest/balance");
     return response.data;
 };
 const getTeamLeaves = async () => {
@@ -39,6 +43,7 @@ const getTeamLeaveCalendar = async () => {
 export default {
     applyLeave,
     getMyLeaves,
+    getLeaveBalance,
     getTeamLeaves,
     approveRejectLeave,
     getTeamLeaveCalendar

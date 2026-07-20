@@ -64,9 +64,16 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
     }, [formData.departmentId]);
 
     useEffect(() => {
+        if (formData.departmentId) {
+            loadEmployees(formData.departmentId);
+        } else {
+            setEmployees([]);
+        }
+    }, [formData.departmentId]);
+
+    useEffect(() => {
         if (isOpen) {
             loadDepartments();
-            loadEmployees();
         }
     }, [isOpen]);
 
@@ -121,9 +128,9 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
         }
     };
 
-    const loadEmployees = async () => {
+    const loadEmployees = async (departmentId: string) => {
         try {
-            const response = await employeeService.getEmployees();
+            const response = await employeeService.getEmployeesByDepartment(departmentId);
             setEmployees(response.data || response);
         } catch (error) {
             console.error("Error fetching employees:", error);
@@ -137,8 +144,8 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
     };
 
     const handleDepartmentSelect = (id: string) => {
-        setFormData(prev => ({ ...prev, departmentId: id, designationId: "" }));
-        setErrors(prev => ({ ...prev, departmentId: "", designationId: "" }));
+        setFormData(prev => ({ ...prev, departmentId: id, designationId: "", managerId: "" }));
+        setErrors(prev => ({ ...prev, departmentId: "", designationId: "", managerId: "" }));
         setIsDropdownOpen(false);
     };
 
@@ -419,18 +426,19 @@ const AddEmployeeModal: React.FC<AddEmployeeModalProps> = ({
                             <div className="relative" ref={managerRef}>
                                 <button
                                     type="button"
+                                    disabled={!formData.departmentId}
                                     onClick={() => setIsManagerDropdownOpen(!isManagerDropdownOpen)}
-                                    className={`flex w-full items-center justify-between rounded-lg border px-4 py-2.5 text-sm bg-gray-50 dark:bg-slate-950 ${errors.managerId ? "border-red-500" : "border-gray-200 dark:border-slate-700"}`}
+                                    className={`flex w-full items-center justify-between rounded-lg border px-4 py-2.5 text-sm ${errors.managerId ? "border-red-500" : "border-gray-200 dark:border-slate-700"} ${!formData.departmentId ? "bg-gray-100 dark:bg-slate-800 cursor-not-allowed opacity-60" : "bg-gray-50 dark:bg-slate-950"}`}
                                 >
                                     <span className={selectedManager ? "text-gray-900 dark:text-slate-100" : "text-gray-400 dark:text-slate-500"}>
-                                        {selectedManager ? `${selectedManager.firstName} ${selectedManager.lastName}` : "Select Reporting Manager"}
+                                        {!formData.departmentId ? "Please select department first" : selectedManager ? `${selectedManager.firstName} ${selectedManager.lastName}` : "Select Reporting Manager"}
                                     </span>
                                     <svg className={`h-4 w-4 transition-transform ${isManagerDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                                     </svg>
                                 </button>
 
-                                {isManagerDropdownOpen && (
+                                {isManagerDropdownOpen && formData.departmentId && (
                                     <div className="absolute z-50 mt-1 w-full rounded-xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-1.5 shadow-xl">
                                         <div className="max-h-48 overflow-y-auto">
                                             {employees.length === 0 ? (

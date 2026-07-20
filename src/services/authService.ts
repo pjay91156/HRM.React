@@ -16,3 +16,8 @@ export const login = async (data: LoginRequest) => {
   const response = await api.post("/auth/login", data);
   return response.data;
 };
+
+export const logout = async () => {
+  const response = await api.post("/auth/logout", {}, { skipSuccessToast: true });
+  return response.data;
+};

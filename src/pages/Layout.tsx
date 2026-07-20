@@ -2,7 +2,14 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import {
     LayoutDashboard, Users, Building2, ChevronDown, LogOut, Briefcase,
-    CalendarRange, Clock, Menu, Bell, Sun, Moon, User, Lock, Settings,TrendingUp
+    CalendarRange, Clock, Menu, Bell, Sun, Moon, User, Lock, Settings,TrendingUp,
+    FileSpreadsheet,
+    DoorOpen,
+    Layers3,
+    Package,
+    CalendarClock,
+    CalendarDays,
+    ClipboardList,
 } from "lucide-react";
 
 import hrmLogo from "../assets/images/HRM.png";
@@ -13,6 +20,11 @@ import {
     markNotificationAsRead,
     markAllNotificationsAsRead,
 } from "../services/notificationService";
+import { logout } from "../services/authService";
+import profileService from "../services/profileService";
+import { type MyProfile } from "../models/Profile";
+import MyProfileModal from "../components/modals/MyProfileModal";
+import { getMediaUrl } from "../utils/media";
 
 interface NavSubItem {
     id: string;
@@ -69,11 +81,55 @@ const NAV_ITEMS: NavItem[] = [
             { id: "Performance Rating", label: "Performance Rating", path: "/performance-ratings" },
             { id: "Performance Template", label: "Performance Template", path: "/performance-templates" },
               { id: "Review", label: " Review", path: "/review" },
+              { id: "MyTeamReview", label: "My Team Review", path: "/my-team-review" },
 
         ],
     },
+    {
+    id: "MeetingRoomManagement",
+    label: "Meeting Rooms",
+    icon: <DoorOpen size={18} />,
+    subItems: [
+        {
+            id: "Floors",
+            label: "Floors",
+            path: "/meeting-room/floors",
+        },
+        {
+            id: "Amenities",
+            label: "Amenities",
+            path: "/meeting-room/amenities",
+        },
+        {
+            id: "MeetingRooms",
+            label: "Meeting Rooms",
+            path: "/meeting-room/rooms",
+        },
+        {
+            id: "BookMeetingRoom",
+            label: "Book Meeting Room",
+            path: "/meeting-room/book",
+        },
+        {
+            id: "MyBookings",
+            label: "My Bookings",
+            path: "/meeting-room/my-bookings",
+        },
+        {
+            id: "BookingCalendar",
+            label: "Booking Calendar",
+            path: "/meeting-room/calendar",
+        },
+        {
+            id: "BookingReport",
+            label: "Booking Report",
+            path: "/meeting-room/report",
+        },
+    ],
+},
     { id: "Departments", label: "Departments", path: "/departments", icon: <Building2 size={18} /> },
     { id: "Designations", label: "Designations", path: "/designations", icon: <Briefcase size={18} /> },
+    { id: "Reports", label: "Reports", path: "/reports", icon: <FileSpreadsheet size={18} /> },
 ];
 
 const findActiveSection = (pathname: string) => {
@@ -112,6 +168,8 @@ const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
     const [isNotifOpen, setIsNotifOpen] = useState(false);
     const [notifications, setNotifications] = useState<NotificationItem[]>([]);
     const [unreadCount, setUnreadCount] = useState(0);
+    const [profile, setProfile] = useState<MyProfile | null>(null);
+    const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
     const dropdownRef = useRef<HTMLDivElement>(null);
     const notifRef = useRef<HTMLDivElement>(null);
@@ -130,6 +188,21 @@ const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
             console.error(error);
         }
     };
+
+    const loadProfile = async () => {
+        try {
+            const response = await profileService.getMyProfile();
+            if (response.success) {
+                setProfile(response.data);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        loadProfile();
+    }, []);
 
     useEffect(() => {
         loadNotifications();
@@ -200,18 +273,35 @@ const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
         if (parent?.id === "LeaveManagement") setIsLeaveOpen(true);
         if (parent?.id === "Attendance") setIsAttendanceOpen(true);
         if (parent?.id === "PerformanceManagement") setIsPerformanceOpen(true);
+        if (parent?.id === "MeetingRoomManagement")setIsMeetingRoomOpen(true);
+    
     }, [parent?.id]);
 
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        navigate("/login");
+    const handleLogout = async () => {
+        try {
+            await logout();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            localStorage.removeItem("token");
+            navigate("/login");
+        }
     };
+
+    const profileName = profile ? `${profile.firstName} ${profile.lastName}` : "";
+    const profileDesignation = profile?.designationName ?? "";
+    const profileInitials = profile
+        ? `${profile.firstName?.[0] ?? ""}${profile.lastName?.[0] ?? ""}`.toUpperCase()
+        : "";
+    const profilePictureSrc = getMediaUrl(profile?.profilePictureUrl);
+    const [isMeetingRoomOpen, setIsMeetingRoomOpen] = useState(false);
 
     const openSectionState: Record<string, [boolean, (v: boolean) => void]> = {
         Employees: [isEmployeesOpen, setIsEmployeesOpen],
         LeaveManagement: [isLeaveOpen, setIsLeaveOpen],
         Attendance: [isAttendanceOpen, setIsAttendanceOpen],
-         PerformanceManagement: [isPerformanceOpen, setIsPerformanceOpen],
+        PerformanceManagement: [isPerformanceOpen, setIsPerformanceOpen],
+        MeetingRoomManagement: [isMeetingRoomOpen, setIsMeetingRoomOpen],
     };
 
     return (
@@ -324,12 +414,16 @@ const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
                         className="flex items-center gap-2.5 pl-1.5 pr-2.5 py-1.5 rounded-xl hover:bg-white/10 transition-colors"
                         onClick={() => setIsProfileOpen(!isProfileOpen)}
                     >
-                        <div className="w-9 h-9 rounded-full bg-white text-[#6C63FF] flex items-center justify-center font-bold text-sm shadow-sm">
-                            JP
-                        </div>
+                        {profilePictureSrc ? (
+                            <img src={profilePictureSrc} alt={profileName} className="w-9 h-9 rounded-full object-cover shadow-sm" />
+                        ) : (
+                            <div className="w-9 h-9 rounded-full bg-white text-[#6C63FF] flex items-center justify-center font-bold text-sm shadow-sm">
+                                {profileInitials}
+                            </div>
+                        )}
                         <div className="text-sm text-left hidden sm:block">
-                            <p className="font-semibold text-white leading-tight">Jay Patel</p>
-                            <p className="text-xs text-indigo-100 leading-tight">Senior Software Engineer</p>
+                            <p className="font-semibold text-white leading-tight">{profileName}</p>
+                            <p className="text-xs text-indigo-100 leading-tight">{profileDesignation}</p>
                         </div>
                         <ChevronDown
                             size={16}
@@ -342,22 +436,27 @@ const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
                         <div className="absolute top-14 right-0 w-64 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800 overflow-hidden">
                             <div className="relative px-4 py-4 bg-gradient-to-br from-[#6C63FF]/10 via-indigo-50 to-purple-50 dark:from-indigo-500/10 dark:via-slate-900 dark:to-purple-500/10">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6C63FF] to-indigo-700 text-white flex items-center justify-center font-bold text-sm shadow-sm ring-2 ring-white dark:ring-slate-900">
-                                        JP
-                                    </div>
+                                    {profilePictureSrc ? (
+                                        <img src={profilePictureSrc} alt={profileName} className="w-10 h-10 rounded-full object-cover shadow-sm ring-2 ring-white dark:ring-slate-900" />
+                                    ) : (
+                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#6C63FF] to-indigo-700 text-white flex items-center justify-center font-bold text-sm shadow-sm ring-2 ring-white dark:ring-slate-900">
+                                            {profileInitials}
+                                        </div>
+                                    )}
                                     <div className="min-w-0">
-                                        <p className="font-semibold text-gray-800 dark:text-slate-100 truncate">Jay Patel</p>
-                                        <p className="text-xs text-gray-500 dark:text-slate-400 truncate">Senior Software Engineer</p>
+                                        <p className="font-semibold text-gray-800 dark:text-slate-100 truncate">{profileName}</p>
+                                        <p className="text-xs text-gray-500 dark:text-slate-400 truncate">{profileDesignation}</p>
                                     </div>
                                 </div>
                             </div>
                             <div className="py-2">
                                 {[
-                                    { icon: <User size={16} />, label: "My Profile" },
-                                    { icon: <Lock size={16} />, label: "Change Password" },
+                                    { icon: <User size={16} />, label: "My Profile", onClick: () => { setIsProfileOpen(false); setIsProfileModalOpen(true); } },
+                                    { icon: <Lock size={16} />, label: "Change Password", onClick: undefined },
                                 ].map((menuItem, i) => (
                                     <button
                                         key={i}
+                                        onClick={menuItem.onClick}
                                         className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-slate-800 text-sm text-gray-700 dark:text-slate-300 transition-colors"
                                     >
                                         <span className="text-gray-400 dark:text-slate-500">{menuItem.icon}</span>
@@ -480,6 +579,12 @@ const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
                     </main>
                 </div>
             </div>
+
+            <MyProfileModal
+                isOpen={isProfileModalOpen}
+                onClose={() => setIsProfileModalOpen(false)}
+                onUpdated={(updated) => setProfile(updated)}
+            />
         </div>
     );
 };

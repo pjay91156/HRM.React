@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Mail, Briefcase, AlertCircle, ChevronDown, ChevronUp, Users } from 'lucide-react';
 import employeeService from '../services/employeeService';
 import Loader from '../components/common/Loader';
+import { getMediaUrl } from '../utils/media';
 
 interface EmployeeNodeData {
     id: string;
@@ -11,6 +12,7 @@ interface EmployeeNodeData {
     department: string;
     email: string;
     isSelf: boolean;
+    profilePictureUrl: string | null;
     children: EmployeeNodeData[];
 }
 
@@ -41,6 +43,7 @@ const EmployeeCardNode: React.FC<NodeProps> = ({ employee }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const hasChildren = employee.children && employee.children.length > 0;
     const style = getDepartmentStyle(employee.department);
+    const pictureSrc = getMediaUrl(employee.profilePictureUrl);
 
     return (
         <div className="flex flex-col items-center">
@@ -54,9 +57,17 @@ const EmployeeCardNode: React.FC<NodeProps> = ({ employee }) => {
                 <span className={`absolute inset-x-0 top-0 h-1.5 rounded-t-2xl ${style.accent}`} />
 
                 <div className="flex items-start gap-2.5">
-                    <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold shadow-sm ring-4 ${style.avatar} ${style.ring}`}>
-                        {getInitials(employee.name)}
-                    </div>
+                    {pictureSrc ? (
+                        <img
+                            src={pictureSrc}
+                            alt={employee.name}
+                            className={`h-9 w-9 shrink-0 rounded-full object-cover shadow-sm ring-4 ${style.ring}`}
+                        />
+                    ) : (
+                        <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold shadow-sm ring-4 ${style.avatar} ${style.ring}`}>
+                            {getInitials(employee.name)}
+                        </div>
+                    )}
                     <div className="min-w-0 flex-1 text-left">
                         <div className="flex items-center justify-between gap-1.5">
                             <span className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">{employee.name}</span>

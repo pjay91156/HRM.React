@@ -8,6 +8,7 @@ export interface EmployeeResponse {
     designationName: string;
     joiningDate: string;
     isActive: boolean;
+    role: "Employee" | "Admin" | "SuperAdmin";
 }
 export interface EmployeeFormData {
     firstName: string;

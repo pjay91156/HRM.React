@@ -1,38 +1,59 @@
-export interface Review {
-    rating: number | null;
-    comment: string;
+export interface ReviewListItem {
+    id: string;
+    performanceCycleId: string;
+    cycleName: string;
+    reviewPeriodStart: string;
+    reviewPeriodEnd: string;
+    employeeReviewStart: string;
+    employeeReviewEnd: string;
+    managerReviewStart: string;
+    managerReviewEnd: string;
+    employeeName: string;
+    status: string;
+    isWindowOpen: boolean;
+    isHistory: boolean;
 }
 
-export interface Skill {
-    id: string;
+export interface ReviewSkill {
+    skillId: string;
     skillName: string;
-    description: string;
+    description: string | null;
     weightage: number;
-    selfReview: Review;
-    managerReview: Review;
+    employeeRating: number | null;
+    employeeComment: string | null;
+    managerRating: number | null;
+    managerComment: string | null;
 }
 
-export interface Category {
-    id: string;
+export interface ReviewCategory {
+    categoryId: string;
     categoryName: string;
     weightage: number;
-    skills: Skill[];
+    skills: ReviewSkill[];
 }
 
-export interface PerformanceReview {
-    isEmployee: boolean;
-    reviewMode: string;
-
-    performanceCycleName: string;
-    reviewPeriod: string;
-    employeeReviewPeriod: string;
-    managerReviewPeriod: string;
-
-    templateId: string;
+export interface ReviewDetail {
+    id: string;
+    cycleName: string;
+    reviewPeriodStart: string;
+    reviewPeriodEnd: string;
+    employeeReviewStart: string;
+    employeeReviewEnd: string;
+    managerReviewStart: string;
+    managerReviewEnd: string;
+    employeeName: string;
     templateName: string;
+    isEmployeeWindowOpen: boolean;
+    isManagerWindowOpen: boolean;
+    isEmployeeSubmitted: boolean;
+    isManagerCompleted: boolean;
+    overallEmployeeComment: string | null;
+    overallManagerComment: string | null;
+    categories: ReviewCategory[];
+}
 
-
-    isSubmitted: boolean;
-
-    categories: Category[];
+export interface SkillRatingInput {
+    skillId: string;
+    rating: number | null;
+    comment: string;
 }

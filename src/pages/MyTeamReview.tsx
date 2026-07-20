@@ -11,7 +11,7 @@ const statusBadge: Record<string, string> = {
     Completed: "bg-emerald-50 text-emerald-600"
 };
 
-const Review: React.FC = () => {
+const MyTeamReview: React.FC = () => {
     const [reviews, setReviews] = useState<ReviewListItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<"active" | "history">("active");
@@ -24,7 +24,7 @@ const Review: React.FC = () => {
     const loadReviews = async () => {
         setLoading(true);
         try {
-            const response = await performanceReviewService.getMyReviews();
+            const response = await performanceReviewService.getMyTeamReviews();
             if (response.success) {
                 setReviews(response.data ?? []);
             }
@@ -37,7 +37,7 @@ const Review: React.FC = () => {
         return (
             <PerformanceReviewDetail
                 reviewId={selectedReviewId}
-                mode="employee"
+                mode="manager"
                 onBack={() => setSelectedReviewId(null)}
                 onSubmitted={() => {
                     setSelectedReviewId(null);
@@ -52,9 +52,9 @@ const Review: React.FC = () => {
     return (
         <div className="space-y-6 max-w-[1600px] mx-auto">
             <div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Performance Reviews</h1>
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">My Team Review</h1>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-                    Complete your self-assessment for active cycles, or view your submission history.
+                    Rate your direct reports for active performance cycles.
                 </p>
             </div>
 
@@ -83,7 +83,7 @@ const Review: React.FC = () => {
                         <ClipboardList size={24} />
                     </div>
                     <h3 className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                        No {activeTab === "active" ? "active" : "past"} performance reviews found
+                        No {activeTab === "active" ? "active" : "past"} team reviews found
                     </h3>
                 </div>
             ) : (
@@ -96,7 +96,8 @@ const Review: React.FC = () => {
                         >
                             <div className="flex items-start justify-between gap-3">
                                 <div>
-                                    <h3 className="font-semibold text-slate-900 dark:text-slate-100">{review.cycleName}</h3>
+                                    <h3 className="font-semibold text-slate-900 dark:text-slate-100">{review.employeeName}</h3>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400">{review.cycleName}</p>
                                     <p className="mt-1 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
                                         <CalendarDays size={13} />
                                         {review.reviewPeriodStart} - {review.reviewPeriodEnd}
@@ -120,4 +121,4 @@ const Review: React.FC = () => {
     );
 };
 
-export default Review;
+export default MyTeamReview;

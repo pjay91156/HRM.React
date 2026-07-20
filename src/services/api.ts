@@ -12,16 +12,47 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
+
+// Separate instance (no interceptors) so the refresh call itself can't recurse
+// into the 401 handler below.
+const refreshClient = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  withCredentials: true,
+});
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
-console.log(token);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
   return config;
 });
+
+let refreshPromise: Promise<string | null> | null = null;
+
+const refreshAccessToken = async (): Promise<string | null> => {
+  if (!refreshPromise) {
+    refreshPromise = refreshClient
+      .post("/auth/refresh")
+      .then((response) => {
+        const token = response.data?.data?.token;
+        if (token) {
+          localStorage.setItem("token", token);
+        }
+        return token ?? null;
+      })
+      .catch(() => null)
+      .finally(() => {
+        refreshPromise = null;
+      });
+  }
+
+  return refreshPromise;
+};
+
 api.interceptors.response.use(
 
     (response) => {
@@ -41,7 +72,28 @@ api.interceptors.response.use(
         return response;
     },
 
-    (error) => {
+    async (error) => {
+
+        const originalRequest = error.config;
+
+        const isAuthEndpoint = originalRequest?.url?.includes("/auth/login") ||
+            originalRequest?.url?.includes("/auth/register") ||
+            originalRequest?.url?.includes("/auth/refresh");
+
+        if (error.response?.status === 401 && !originalRequest?._retry && !isAuthEndpoint) {
+            originalRequest._retry = true;
+
+            const newToken = await refreshAccessToken();
+
+            if (newToken) {
+                originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                return api(originalRequest);
+            }
+
+            localStorage.removeItem("token");
+            window.location.href = "/login";
+            return Promise.reject(error);
+        }
 
         if (error.response?.data?.message) {
             toast.error(error.response.data.message);

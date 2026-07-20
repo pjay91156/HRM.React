@@ -50,8 +50,8 @@ export default function Login() {
       localStorage.setItem("token", response.data.token);
       navigate("/dashboard");
 
-    } catch {
-      alert("Login failed.");
+    } catch (error) {
+      console.error(error);
     } finally {
       setLoading(false);
     }
