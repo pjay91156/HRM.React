@@ -24,6 +24,13 @@ import PerformanceSkill from "../pages/PerformanceSkill";
 import Review from "../pages/Review";
 import MyTeamReview from "../pages/MyTeamReview";
 import Reports from "../pages/Reports";
+import Floor from "../pages/Floor";
+import MeetingRoomAmenity from "../pages/MeetingRoomAmenity";
+import MeetingRoom from "../pages/MeetingRoom";
+import BookMeetingRoom from "../pages/BookMeetingRoom";
+import MyBookings from "../pages/MyBookings";
+import BookingCalendar from "../pages/BookingCalendar";
+import BookingReport from "../pages/BookingReport";
 
 export default function AppRoutes() {
   return (
@@ -55,6 +62,13 @@ export default function AppRoutes() {
             <Route path="/review" element={<Review />} />
             <Route path="/my-team-review" element={<MyTeamReview />} />
             <Route path="/reports" element={<Reports />} />
+            <Route path="/meeting-room/floors" element={<Floor />} />
+            <Route path="/meeting-room/amenities" element={<MeetingRoomAmenity />} />
+            <Route path="/meeting-room/rooms" element={<MeetingRoom />} />
+            <Route path="/meeting-room/book" element={<BookMeetingRoom />} />
+            <Route path="/meeting-room/my-bookings" element={<MyBookings />} />
+            <Route path="/meeting-room/calendar" element={<BookingCalendar />} />
+            <Route path="/meeting-room/report" element={<BookingReport />} />
 
       </Route>
     </Routes>
