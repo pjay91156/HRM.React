@@ -1,0 +1,64 @@
+/* Calendar */
+.rbc-calendar {
+    font-family: inherit;
+    background: transparent;
+}
+
+/* Hide default header */
+/* .rbc-time-header {
+    display: none;
+} */
+
+/* Remove top border */
+.rbc-time-content {
+    border-top: none;
+}
+
+/* Better gutter width */
+.rbc-time-gutter {
+    width: 70px;
+}
+.rbc-current-time-indicator {
+    display: none;
+}
+
+/* Time labels */
+.rbc-time-gutter .rbc-label {
+    font-size: 12px;
+    color: #64748b;
+    padding-right: 12px;
+}
+
+/* Hour height */
+.rbc-timeslot-group {
+    min-height: 64px;
+}
+
+/* Half-hour line */
+.rbc-time-slot {
+    border-top: 1px solid #f1f5f9;
+}
+
+/* Hour line */
+.rbc-timeslot-group {
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* Event */
+.rbc-event {
+    
+    border: none;
+    border-radius: 10px;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(99,102,241,.25);
+     min-height: 32px! important; 
+}
+
+.rbc-event-content{
+    height:100%;
+}
+
+.rbc-current-time-indicator {
+    background: #ef4444;
+}

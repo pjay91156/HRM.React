@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import {
     LayoutDashboard, Users, Building2, ChevronDown, LogOut, Briefcase,
-    CalendarRange, Clock, Menu, Bell, Sun, Moon, User, Lock, Settings,TrendingUp,
+    CalendarRange, Clock, Menu, Bell, Sun, Moon, User, Lock, Settings, TrendingUp,
     FileSpreadsheet,
     DoorOpen,
     Layers3,
@@ -80,53 +80,53 @@ const NAV_ITEMS: NavItem[] = [
             { id: "Performance Cycle", label: "Performance Cycle", path: "/performance-cycles" },
             { id: "Performance Rating", label: "Performance Rating", path: "/performance-ratings" },
             { id: "Performance Template", label: "Performance Template", path: "/performance-templates" },
-              { id: "Review", label: " Review", path: "/review" },
-              { id: "MyTeamReview", label: "My Team Review", path: "/my-team-review" },
+            { id: "Review", label: " Review", path: "/review" },
+            { id: "MyTeamReview", label: "My Team Review", path: "/my-team-review" },
 
         ],
     },
     {
-    id: "MeetingRoomManagement",
-    label: "Meeting Rooms",
-    icon: <DoorOpen size={18} />,
-    subItems: [
-        {
-            id: "Floors",
-            label: "Floors",
-            path: "/meeting-room/floors",
-        },
-        {
-            id: "Amenities",
-            label: "Amenities",
-            path: "/meeting-room/amenities",
-        },
-        {
-            id: "MeetingRooms",
-            label: "Meeting Rooms",
-            path: "/meeting-room/rooms",
-        },
-        {
-            id: "BookMeetingRoom",
-            label: "Book Meeting Room",
-            path: "/meeting-room/book",
-        },
-        {
-            id: "MyBookings",
-            label: "My Bookings",
-            path: "/meeting-room/my-bookings",
-        },
-        {
-            id: "BookingCalendar",
-            label: "Booking Calendar",
-            path: "/meeting-room/calendar",
-        },
-        {
-            id: "BookingReport",
-            label: "Booking Report",
-            path: "/meeting-room/report",
-        },
-    ],
-},
+        id: "MeetingRoomManagement",
+        label: "Meeting Rooms",
+        icon: <DoorOpen size={18} />,
+        subItems: [
+            {
+                id: "Floors",
+                label: "Floors",
+                path: "/meeting-room/floors",
+            },
+            {
+                id: "Amenities",
+                label: "Amenities",
+                path: "/meeting-room/amenities",
+            },
+            {
+                id: "MeetingRooms",
+                label: "Meeting Rooms",
+                path: "/meeting-room/rooms",
+            },
+            {
+                id: "BookMeetingRoom",
+                label: "Book Meeting Room",
+                path: "/meeting-room/book",
+            },
+            {
+                id: "MyBookings",
+                label: "My Bookings",
+                path: "/meeting-room/my-bookings",
+            },
+            {
+                id: "BookingCalendar",
+                label: "Booking Calendar",
+                path: "/meeting-room/calendar",
+            },
+            {
+                id: "BookingReport",
+                label: "Booking Report",
+                path: "/meeting-room/report",
+            },
+        ],
+    },
     { id: "Departments", label: "Departments", path: "/departments", icon: <Building2 size={18} /> },
     { id: "Designations", label: "Designations", path: "/designations", icon: <Briefcase size={18} /> },
     { id: "Reports", label: "Reports", path: "/reports", icon: <FileSpreadsheet size={18} /> },
@@ -159,11 +159,12 @@ const formatTimeAgo = (dateString: string) => {
 };
 
 const Layout: React.FC = () => {
-    const [isEmployeesOpen, setIsEmployeesOpen] = useState(false);
-    const [isLeaveOpen, setIsLeaveOpen] = useState(false);
-    const [isAttendanceOpen, setIsAttendanceOpen] = useState(false);
-    const [isPerformanceOpen, setIsPerformanceOpen] = useState(false);
-const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
+    // const [isEmployeesOpen, setIsEmployeesOpen] = useState(false);
+    // const [isLeaveOpen, setIsLeaveOpen] = useState(false);
+    // const [isAttendanceOpen, setIsAttendanceOpen] = useState(false);
+    // const [isPerformanceOpen, setIsPerformanceOpen] = useState(false);
+    const [openMenu, setOpenMenu] = useState<string | null>(null);
+    const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [isNotifOpen, setIsNotifOpen] = useState(false);
     const [notifications, setNotifications] = useState<NotificationItem[]>([]);
@@ -222,19 +223,13 @@ const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
-    useEffect(() => {
-    const handleResize = () => {
-        if (window.innerWidth < 1024) {
-            setIsCollapsed(true);
-        } else {
-            setIsCollapsed(false);
-        }
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-}, []);
+    useLayoutEffect(() => {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "auto", // or "smooth"
+        });
+    }, [location.pathname]);
 
     const handleNotificationClick = async (notification: NotificationItem) => {
         setIsNotifOpen(false);
@@ -269,12 +264,9 @@ const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
     };
 
     useEffect(() => {
-        if (parent?.id === "Employees") setIsEmployeesOpen(true);
-        if (parent?.id === "LeaveManagement") setIsLeaveOpen(true);
-        if (parent?.id === "Attendance") setIsAttendanceOpen(true);
-        if (parent?.id === "PerformanceManagement") setIsPerformanceOpen(true);
-        if (parent?.id === "MeetingRoomManagement")setIsMeetingRoomOpen(true);
-    
+        if (parent?.id) {
+            setOpenMenu(parent.id);
+        }
     }, [parent?.id]);
 
     const handleLogout = async () => {
@@ -294,21 +286,30 @@ const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
         ? `${profile.firstName?.[0] ?? ""}${profile.lastName?.[0] ?? ""}`.toUpperCase()
         : "";
     const profilePictureSrc = getMediaUrl(profile?.profilePictureUrl);
-    const [isMeetingRoomOpen, setIsMeetingRoomOpen] = useState(false);
+    // const [isMeetingRoomOpen, setIsMeetingRoomOpen] = useState(false);
 
-    const openSectionState: Record<string, [boolean, (v: boolean) => void]> = {
-        Employees: [isEmployeesOpen, setIsEmployeesOpen],
-        LeaveManagement: [isLeaveOpen, setIsLeaveOpen],
-        Attendance: [isAttendanceOpen, setIsAttendanceOpen],
-        PerformanceManagement: [isPerformanceOpen, setIsPerformanceOpen],
-        MeetingRoomManagement: [isMeetingRoomOpen, setIsMeetingRoomOpen],
-    };
+    // const openSectionState: Record<string, [boolean, (v: boolean) => void]> = {
+    //     Employees: [isEmployeesOpen, setIsEmployeesOpen],
+    //     LeaveManagement: [isLeaveOpen, setIsLeaveOpen],
+    //     Attendance: [isAttendanceOpen, setIsAttendanceOpen],
+    //     PerformanceManagement: [isPerformanceOpen, setIsPerformanceOpen],
+    //     MeetingRoomManagement: [isMeetingRoomOpen, setIsMeetingRoomOpen],
+    // };
+
+    const contentRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        contentRef.current?.scrollTo({
+            top: 0,
+            behavior: "auto", // or "smooth"
+        });
+    }, [location.pathname]);
 
     return (
         <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-slate-950 font-sans antialiased text-gray-900 dark:text-slate-100">
 
             {/* Top Bar */}
-            <header className="h-16 shrink-0 bg-[#6C63FF] flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30 shadow-md">
+            <header className="h-16 shrink-0 bg-[#6C63FF] flex items-center justify-between px-4 sm:px-6 sticky top-0 z-35 shadow-md">
                 <div className="flex items-center gap-2">
                     <img src={hrmLogo} alt="HRM" className="h-10 w-auto object-contain" />
                     <button
@@ -398,13 +399,7 @@ const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
                         )}
                     </div>
 
-                    <button
-                        type="button"
-                        title="Settings"
-                        className="p-2 rounded-lg text-white hover:bg-white/10 transition-colors"
-                    >
-                        <Settings size={20} />
-                    </button>
+
 
                     <div className="w-px h-8 bg-white/20 mx-1" />
 
@@ -483,7 +478,7 @@ const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
                 <aside className={`${isCollapsed ? "w-[76px]" : "w-[240px]"} shrink-0 bg-white dark:bg-slate-900 border-r border-gray-100 dark:border-slate-800 flex flex-col transition-all duration-200`}>
 
                     {/* Menu */}
-                    <nav className="min-h-0 overflow-y-auto p-4 space-y-1">
+                    <nav className="min-h-0 overflow-y-auto p-3 space-y-1">
                         {NAV_ITEMS.map((item) => {
                             if (!item.subItems) {
                                 const isActive = current?.id === item.id;
@@ -493,9 +488,9 @@ const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
                                         key={item.id}
                                         onClick={() => navigate(item.path!)}
                                         title={isCollapsed ? item.label : undefined}
-                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors ${isCollapsed ? "justify-center" : ""} ${isActive
-                                                ? "bg-[#6C63FF] text-white font-semibold shadow-sm"
-                                                : "text-gray-500 hover:bg-gray-50 dark:text-slate-400 dark:hover:bg-slate-800"
+                                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors ${isCollapsed ? "justify-center" : ""} ${isActive
+                                            ? "bg-[#6C63FF] text-white font-semibold shadow-sm"
+                                            : "text-gray-500 hover:bg-gray-50 dark:text-slate-400 dark:hover:bg-slate-800"
                                             }`}
                                     >
                                         {item.icon}
@@ -504,12 +499,15 @@ const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
                                 );
                             }
 
-                            const [isOpen, setIsOpen] = openSectionState[item.id];
+                            const isOpen = openMenu === item.id;
                             const isSectionActive = parent?.id === item.id;
 
                             const toggleOpen = () => {
-                                if (isCollapsed) setIsCollapsed(false);
-                                setIsOpen(!isOpen);
+                                if (isCollapsed) {
+                                    setIsCollapsed(false);
+                                }
+
+                                setOpenMenu(prev => prev === item.id ? null : item.id);
                             };
 
                             return (
@@ -517,9 +515,9 @@ const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
                                     <button
                                         onClick={toggleOpen}
                                         title={isCollapsed ? item.label : undefined}
-                                        className={`w-full flex items-center px-4 py-3 rounded-xl text-sm transition-colors ${isCollapsed ? "justify-center" : "justify-between"} ${isSectionActive
-                                                ? "bg-[#6C63FF] text-white font-medium shadow-sm"
-                                                : "text-gray-500 hover:bg-gray-50 dark:text-slate-400 dark:hover:bg-slate-800"
+                                        className={`w-full flex items-center px-3 py-2.5 rounded-xl text-sm transition-colors ${isCollapsed ? "justify-center" : "justify-between"} ${isSectionActive
+                                            ? "bg-[#6C63FF] text-white font-medium shadow-sm"
+                                            : "text-gray-500 hover:bg-gray-50 dark:text-slate-400 dark:hover:bg-slate-800"
                                             }`}
                                     >
                                         <div className="flex items-center gap-3">
@@ -536,16 +534,16 @@ const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
                                     </button>
 
                                     {!isCollapsed && isOpen && (
-                                        <div className="ml-6 pl-3 border-l border-gray-100 dark:border-slate-800 space-y-1">
+                                        <div className="ml-3 pl-2 border-l border-gray-100 dark:border-slate-800 space-y-1">
                                             {item.subItems.map((subItem) => {
                                                 const isSubActive = current?.id === subItem.id;
                                                 return (
                                                     <button
                                                         key={subItem.id}
                                                         onClick={() => navigate(subItem.path)}
-                                                        className={`w-full text-left block px-4 py-2 rounded-lg text-xs font-medium transition-colors ${isSubActive
-                                                                ? "text-indigo-600 font-semibold bg-indigo-50/60 dark:text-indigo-400 dark:bg-indigo-500/10"
-                                                                : "text-gray-400 hover:text-gray-900 hover:bg-gray-50/50 dark:text-slate-500 dark:hover:text-slate-100 dark:hover:bg-slate-800/60"
+                                                        className={`w-full text-left block px-2.5 py-2 rounded-lg text-xs font-medium transition-colors ${isSubActive
+                                                            ? "text-indigo-600 font-semibold bg-indigo-50/60 dark:text-indigo-400 dark:bg-indigo-500/10"
+                                                            : "text-gray-400 hover:text-gray-900 hover:bg-gray-50/50 dark:text-slate-500 dark:hover:text-slate-100 dark:hover:bg-slate-800/60"
                                                             }`}
                                                     >
                                                         {subItem.label}
@@ -560,7 +558,7 @@ const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
                     </nav>
 
                     {/* Logout */}
-                    <div className="p-4 border-t border-gray-100 dark:border-slate-800 shrink-0">
+                    {/* <div className="p-4 border-t border-gray-100 dark:border-slate-800 shrink-0">
                         <button
                             className={`w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-colors ${isCollapsed ? "justify-center" : ""}`}
                             onClick={handleLogout}
@@ -569,11 +567,11 @@ const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 1024);
                             <LogOut size={18} />
                             {!isCollapsed && "Logout"}
                         </button>
-                    </div>
+                    </div> */}
                 </aside>
 
                 {/* Content */}
-                <div className="flex-1 min-w-0 overflow-y-auto">
+                <div className="flex-1 min-w-0 overflow-y-auto" ref={contentRef}>
                     <main className="p-8 max-w-[1400px] w-full mx-auto">
                         <Outlet />
                     </main>
