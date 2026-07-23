@@ -31,6 +31,7 @@ import BookMeetingRoom from "../pages/BookMeetingRoom";
 import MyBookings from "../pages/MyBookings";
 import BookingCalendar from "../pages/BookingCalendar";
 import BookingReport from "../pages/BookingReport";
+import CompanyDocuments from "../pages/CompanyDocuments";
 
 export default function AppRoutes() {
   return (
@@ -62,6 +63,7 @@ export default function AppRoutes() {
             <Route path="/review" element={<Review />} />
             <Route path="/my-team-review" element={<MyTeamReview />} />
             <Route path="/reports" element={<Reports />} />
+            <Route path="/company-documents" element={<CompanyDocuments />} />
             <Route path="/meeting-room/floors" element={<Floor />} />
             <Route path="/meeting-room/amenities" element={<MeetingRoomAmenity />} />
             <Route path="/meeting-room/rooms" element={<MeetingRoom />} />

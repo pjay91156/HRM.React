@@ -10,6 +10,7 @@ import {
     CalendarClock,
     CalendarDays,
     ClipboardList,
+    FileText,
 } from "lucide-react";
 
 import hrmLogo from "../assets/images/HRM.png";
@@ -130,6 +131,7 @@ const NAV_ITEMS: NavItem[] = [
     { id: "Departments", label: "Departments", path: "/departments", icon: <Building2 size={18} /> },
     { id: "Designations", label: "Designations", path: "/designations", icon: <Briefcase size={18} /> },
     { id: "Reports", label: "Reports", path: "/reports", icon: <FileSpreadsheet size={18} /> },
+    { id: "CompanyDocuments", label: "Company Documents", path: "/company-documents", icon: <FileText size={18} /> },
 ];
 
 const findActiveSection = (pathname: string) => {
